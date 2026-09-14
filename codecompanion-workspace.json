@@ -1,8 +1,8 @@
 {
   "$schema": "https://codecompanion.dev/schema/workspace.json",
-  "name": "Oblivion Census",
-  "description": "Open‑source web tool for tracking discoveries (ScottMcDermid/oblivion‑census)",
-  "tags": ["oblivion", "react", "typescript"],
+  "name": "Pokedex",
+  "description": "Open‑source Gen 1 Pokédex for Red, Blue & Yellow — hosted at pokedex.thedeadbeat.club",
+  "tags": ["pokemon", "pokedex", "react", "typescript"],
   "include": [
     "src/**/*.{ts,tsx,js,jsx,css,json}",
     "public/**/*.json",

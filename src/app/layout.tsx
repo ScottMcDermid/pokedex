@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: 'Pokedex — Gen 1',
     description:
       'A complete Gen 1 Pokedex for Pokemon Red, Blue, and Yellow. Browse all 151 Pokemon with stats, learnsets, TM/HM moves, evolution info, and version locations.',
-    url: 'https://pokedex.tools',
+    url: 'https://pokedex.thedeadbeat.club',
     siteName: 'Pokedex — Gen 1',
     type: 'website',
     locale: 'en_US',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       'A complete Gen 1 Pokedex for Pokemon Red, Blue, and Yellow. Browse all 151 Pokemon with stats, learnsets, TM/HM moves, evolution info, and version locations.',
   },
   alternates: {
-    canonical: 'https://pokedex.tools',
+    canonical: 'https://pokedex.thedeadbeat.club',
   },
   robots: {
     index: true,
