@@ -911,6 +911,15 @@ export const moves: Record<string, Move> = {
     effectPct: null,
     description: 'A non-stop attack move. The user\'s ATTACK power increases every time it sustains damage.',
   },
+  'Rapid Spin': {
+    name: 'Rapid Spin',
+    type: 'Normal',
+    power: 20,
+    accuracy: 100,
+    pp: 40,
+    effectPct: null,
+    description: 'A spin attack that can also eliminate such moves as BIND, WRAP, LEECH SEED, and SPIKES.',
+  },
   'Razor Leaf': {
     name: 'Razor Leaf',
     type: 'Grass',
@@ -1252,6 +1261,15 @@ export const moves: Record<string, Move> = {
     pp: 10,
     effectPct: null,
     description: 'The user chomps hard on the target with its sharp front fangs. It cuts the target\'s HP in half.',
+  },
+  Superpower: {
+    name: 'Superpower',
+    type: 'Fighting',
+    power: 120,
+    accuracy: 100,
+    pp: 5,
+    effectPct: 100,
+    description: 'The user attacks the target with great power. However, this also lowers the user\'s ATTACK and DEFENSE.',
   },
   Supersonic: {
     name: 'Supersonic',

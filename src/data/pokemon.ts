@@ -2546,7 +2546,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { move: 'Bubble', level: null },
       { move: 'Hypnosis', level: 16 },
       { move: 'Water Gun', level: 19 },
-      { move: 'Doubleslap', level: 25 },
+      { move: 'Double Slap', level: 25 },
       { move: 'Body Slam', level: 31 },
       { move: 'Amnesia', level: 38 },
       { move: 'Hydro Pump', level: 45 },
@@ -2591,7 +2591,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { move: 'Bubble', level: null },
       { move: 'Hypnosis', level: 16 },
       { move: 'Water Gun', level: 19 },
-      { move: 'Doubleslap', level: 26 },
+      { move: 'Double Slap', level: 26 },
       { move: 'Body Slam', level: 33 },
       { move: 'Amnesia', level: 41 },
       { move: 'Hydro Pump', level: 49 },
@@ -2640,7 +2640,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { move: 'Bubble', level: null },
       { move: 'Hypnosis', level: null },
       { move: 'Water Gun', level: null },
-      { move: 'Doubleslap', level: null },
+      { move: 'Double Slap', level: null },
       { move: 'Body Slam', level: 33 },
       { move: 'Amnesia', level: 41 },
       { move: 'Hydro Pump', level: 49 },
@@ -3947,7 +3947,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     learnsetRB: [
       { move: 'Tackle', level: null }, { move: 'Water Gun', level: 17 }, { move: 'Harden', level: 22 },
       { move: 'Minimize', level: 27 }, { move: 'Light Screen', level: 32 }, { move: 'Swift', level: 37 },
-      { move: 'Bubblebeam', level: 42 }, { move: 'Recover', level: 47 }, { move: 'Psychic', level: 52 },
+      { move: 'Bubble Beam', level: 42 }, { move: 'Recover', level: 47 }, { move: 'Psychic', level: 52 },
       { move: 'Hydro Pump', level: 57 },
     ],
     tmMoves: [
@@ -4025,7 +4025,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     height: "4'07\"", weight: '89.5lbs', captureRate: 45,
     baseStats: { hp: 65, attack: 50, defense: 35, special: 95, speed: 95 },
     learnsetRB: [
-      { move: 'Pound', level: null }, { move: 'Lovely Kiss', level: null }, { move: 'Powder Snow', level: 18 },
+      { move: 'Pound', level: null }, { move: 'Lovely Kiss', level: null }, { move: 'Meditate', level: 18 },
       { move: 'Double Slap', level: 23 }, { move: 'Ice Punch', level: 31 }, { move: 'Body Slam', level: 39 },
       { move: 'Thrash', level: 47 }, { move: 'Blizzard', level: 58 },
     ],
@@ -4538,7 +4538,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     baseStats: { hp: 100, attack: 100, defense: 100, special: 100, speed: 100 },
     learnsetRB: [
       { move: 'Pound', level: null }, { move: 'Metronome', level: 20 }, { move: 'Minimize', level: 30 },
-      { move: 'Softboiled', level: 40 }, { move: 'Metronome', level: 50 },
+      { move: 'Soft-Boiled', level: 40 }, { move: 'Metronome', level: 50 },
     ],
     tmMoves: [
       { tm: 'TM01', move: 'Mega Punch' }, { tm: 'TM02', move: 'Razor Wind' }, { tm: 'TM03', move: 'Swords Dance' },
