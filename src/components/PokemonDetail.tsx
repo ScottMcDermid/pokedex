@@ -235,11 +235,12 @@ function PlaceTooltip({
   versionColor: string;
 }) {
   const tooltipContent = (
-    <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 220 }}>
+    <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
       <Box
         sx={{
           position: 'relative',
           width: '100%',
+          minHeight: 180,
           aspectRatio: '4/3',
           borderRadius: 1,
           overflow: 'hidden',
@@ -256,16 +257,16 @@ function PlaceTooltip({
         />
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-        <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.7rem', color: '#e5e7eb' }}>
+        <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#e5e7eb' }}>
           {info.label}
         </Typography>
         <Link
           href={pokEarthUrl(info.slug)}
           target="_blank"
           rel="noreferrer"
-          sx={{ display: 'flex', alignItems: 'center', gap: 0.25, fontSize: '0.65rem', color: versionColor, whiteSpace: 'nowrap' }}
+          sx={{ display: 'flex', alignItems: 'center', gap: 0.25, fontSize: '0.8rem', color: versionColor, whiteSpace: 'nowrap' }}
         >
-          <MapIcon sx={{ fontSize: 11 }} />
+          <MapIcon sx={{ fontSize: 14 }} />
           Pokéarth
         </Link>
       </Box>
@@ -287,7 +288,7 @@ function PlaceTooltip({
             borderRadius: 1.5,
             p: 1,
             boxShadow: `0 4px 20px rgba(0,0,0,0.6), 0 0 0 1px ${versionColor}33`,
-            maxWidth: 240,
+            maxWidth: 360,
           },
         },
         arrow: { sx: { color: `${versionColor}66` } },
