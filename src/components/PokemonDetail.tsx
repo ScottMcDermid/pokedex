@@ -13,7 +13,9 @@ import TableRow from '@mui/material/TableRow';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import Tooltip from '@mui/material/Tooltip';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import MapIcon from '@mui/icons-material/Map';
 import Image from 'next/image';
 
 import { PokemonDefinition, LearnedMove, TmMove } from '@/utils/pokemonTypes';
@@ -21,7 +23,7 @@ import { TYPE_COLORS } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
 import { moves } from '@/data/moves';
 import { pokemonById } from '@/data/pokemon';
-import { rbSpriteUrl, yellowSpriteUrl, artUrl, padId, pokedexUrl, attackdexUrl } from '@/utils/serebiiLinks';
+import { rbSpriteUrl, yellowSpriteUrl, artUrl, padId, pokedexUrl, attackdexUrl, findLocationInfo, pokEarthUrl, mapImageUrl } from '@/utils/serebiiLinks';
 
 interface PokemonDetailProps {
   pokemon: PokemonDefinition;
@@ -335,27 +337,115 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
       <Box>
         <SectionHeader title="Version Availability & Locations" />
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-          {pokemon.locations.map((loc) => (
-            <Box key={loc.version} sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
-              <Chip
-                label={loc.version}
-                size="small"
+          {pokemon.locations.map((loc) => {
+            const locInfo = findLocationInfo(loc.location);
+            const versionColor =
+              loc.version === 'Red' ? '#cc0000' : loc.version === 'Blue' ? '#3b5998' : '#f8d030';
+
+            const tooltipContent = locInfo ? (
+              <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 220 }}>
+                {/* Area map image */}
+                <Box
+                  sx={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '4/3',
+                    borderRadius: 1,
+                    overflow: 'hidden',
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    border: `1px solid ${versionColor}44`,
+                  }}
+                >
+                  <Image
+                    src={mapImageUrl(locInfo.mapNum)}
+                    alt={locInfo.label ?? loc.location}
+                    fill
+                    style={{ objectFit: 'contain', imageRendering: 'pixelated' }}
+                    unoptimized
+                  />
+                </Box>
+                {/* Label + link */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '0.7rem', color: '#e5e7eb' }}>
+                    {locInfo.label ?? loc.location}
+                  </Typography>
+                  <Link
+                    href={pokEarthUrl(locInfo.slug)}
+                    target="_blank"
+                    rel="noreferrer"
+                    sx={{ display: 'flex', alignItems: 'center', gap: 0.25, fontSize: '0.65rem', color: versionColor, whiteSpace: 'nowrap' }}
+                  >
+                    <MapIcon sx={{ fontSize: 11 }} />
+                    Pokéarth
+                  </Link>
+                </Box>
+              </Box>
+            ) : null;
+
+            const locationText = (
+              <Typography
+                variant="body2"
                 sx={{
-                  flexShrink: 0,
-                  height: 20,
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  backgroundColor: loc.version === 'Red' ? '#cc0000' : loc.version === 'Blue' ? '#3b5998' : '#f8d030',
-                  color: loc.version === 'Yellow' ? '#000' : '#fff',
-                  '& .MuiChip-label': { px: 0.75 },
-                  borderRadius: 0.5,
+                  color: 'text.primary',
+                  fontSize: '0.78rem',
+                  cursor: locInfo ? 'help' : 'default',
+                  borderBottom: locInfo ? '1px dashed rgba(255,255,255,0.25)' : 'none',
+                  display: 'inline',
+                  lineHeight: 1.5,
                 }}
-              />
-              <Typography variant="body2" sx={{ color: 'text.primary', fontSize: '0.78rem' }}>
+              >
                 {loc.location}
               </Typography>
-            </Box>
-          ))}
+            );
+
+            return (
+              <Box key={loc.version} sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
+                <Chip
+                  label={loc.version}
+                  size="small"
+                  sx={{
+                    flexShrink: 0,
+                    height: 20,
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    backgroundColor: versionColor,
+                    color: loc.version === 'Yellow' ? '#000' : '#fff',
+                    '& .MuiChip-label': { px: 0.75 },
+                    borderRadius: 0.5,
+                    mt: '2px',
+                  }}
+                />
+                {locInfo ? (
+                  <Tooltip
+                    title={tooltipContent}
+                    placement="right"
+                    arrow
+                    enterDelay={200}
+                    enterNextDelay={100}
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: '#1a1a1a',
+                          border: `1px solid ${versionColor}66`,
+                          borderRadius: 1.5,
+                          p: 1,
+                          boxShadow: `0 4px 20px rgba(0,0,0,0.6), 0 0 0 1px ${versionColor}33`,
+                          maxWidth: 240,
+                        },
+                      },
+                      arrow: {
+                        sx: { color: `${versionColor}66` },
+                      },
+                    }}
+                  >
+                    <span>{locationText}</span>
+                  </Tooltip>
+                ) : (
+                  locationText
+                )}
+              </Box>
+            );
+          })}
         </Box>
       </Box>
 
