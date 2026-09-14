@@ -127,14 +127,157 @@ export function mapImageUrl(mapNum: number): string {
   return `https://www.serebii.net/pokearth/maps/kanto-rby/${mapNum}.png`;
 }
 
+// ─── Route number lookup ──────────────────────────────────────────────────────
+
+/** Map route number → KantoLocationInfo (for routes 1–25 only) */
+function routeInfo(n: number): KantoLocationInfo | null {
+  const entry = KANTO_LOCATIONS.find((e) => e.key === `Route ${n}`);
+  return entry ? entry.info : null;
+}
+
+// ─── Location tokeniser ───────────────────────────────────────────────────────
+
+/** A segment of a parsed location string. */
+export type LocationSegment =
+  | { kind: 'place'; text: string; info: KantoLocationInfo }
+  | { kind: 'text'; text: string };
+
 /**
- * Given a location string from pokemon.ts, find the first matching
- * Kanto location entry. Returns null if unmappable (starters, trades, gifts, events).
+ * Parse a location string (e.g. "Routes 1, 2, 3, 5, 6, 7, 8 (Common)" or
+ * "Viridian Forest, Routes 24-25") into an ordered array of segments.
+ *
+ * Named places that have a map entry become `{ kind: 'place' }` segments;
+ * everything else (punctuation, qualifiers like "(Common)") becomes `{ kind: 'text' }`.
+ *
+ * Handles:
+ *  - "Routes N-M"     → individual route segments for each N..M
+ *  - "Routes N, M, …" → individual route segments for each number
+ *  - "Route N"        → single route segment
+ *  - Named locations  → matched against KANTO_LOCATIONS keys
  */
-export function findLocationInfo(locationStr: string): KantoLocationInfo | null {
-  const lower = locationStr.toLowerCase();
-  for (const { key, info } of KANTO_LOCATIONS) {
-    if (lower.includes(key.toLowerCase())) return info;
+export function tokenizeLocation(locationStr: string): LocationSegment[] {
+  const segments: LocationSegment[] = [];
+  let remaining = locationStr;
+
+  // Build a sorted list of named-place keys (longest first) to avoid
+  // partial matches (e.g. "Cerulean Cave" before "Cerulean City").
+  const namedKeys = [...KANTO_LOCATIONS]
+    .filter((e) => !e.key.startsWith('Route ')) // routes handled separately
+    .sort((a, b) => b.key.length - a.key.length);
+
+  while (remaining.length > 0) {
+    let matched = false;
+
+    // ── "Routes N-M" (range) ──────────────────────────────────────────────
+    const rangeMatch = remaining.match(/^(Routes?\s+)(\d+)-(\d+)/i);
+    if (rangeMatch) {
+      const prefix = rangeMatch[1]; // "Routes " or "Route "
+      const from = parseInt(rangeMatch[2], 10);
+      const to = parseInt(rangeMatch[3], 10);
+      if (prefix) segments.push({ kind: 'text', text: prefix });
+      for (let n = from; n <= to; n++) {
+        const info = routeInfo(n);
+        const label = `Route ${n}`;
+        if (info) {
+          segments.push({ kind: 'place', text: label, info });
+        } else {
+          segments.push({ kind: 'text', text: label });
+        }
+        if (n < to) segments.push({ kind: 'text', text: '-' });
+      }
+      remaining = remaining.slice(rangeMatch[0].length);
+      matched = true;
+    }
+
+    // ── "Routes N, M, …" — plural with comma-separated numbers ───────────
+    if (!matched) {
+      const pluralMatch = remaining.match(/^Routes\s+(\d[\d,\s]*)/i);
+      if (pluralMatch) {
+        segments.push({ kind: 'text', text: 'Routes ' });
+        remaining = remaining.slice('Routes '.length);
+
+        // Consume a run of "N" / ", N" / ", N" tokens
+        let first = true;
+        while (remaining.length > 0) {
+          const numMatch = remaining.match(/^(\d+)/);
+          if (!numMatch) break;
+          const n = parseInt(numMatch[1], 10);
+          const info = routeInfo(n);
+          const label = `${n}`;
+          if (!first) {
+            // peek back: the separator was already consumed as text
+          }
+          if (info) {
+            segments.push({ kind: 'place', text: label, info });
+          } else {
+            segments.push({ kind: 'text', text: label });
+          }
+          remaining = remaining.slice(numMatch[0].length);
+          first = false;
+
+          // consume the separator ", " or "-" if it leads to another number
+          const sepMatch = remaining.match(/^(,\s*|-\s*)(?=\d)/);
+          if (sepMatch) {
+            segments.push({ kind: 'text', text: sepMatch[0] });
+            remaining = remaining.slice(sepMatch[0].length);
+          } else {
+            break;
+          }
+        }
+        matched = true;
+      }
+    }
+
+    // ── "Route N" (singular) ──────────────────────────────────────────────
+    if (!matched) {
+      const singleRoute = remaining.match(/^Route\s+(\d+)/i);
+      if (singleRoute) {
+        const n = parseInt(singleRoute[1], 10);
+        const info = routeInfo(n);
+        const label = `Route ${n}`;
+        if (info) {
+          segments.push({ kind: 'place', text: label, info });
+        } else {
+          segments.push({ kind: 'text', text: label });
+        }
+        remaining = remaining.slice(singleRoute[0].length);
+        matched = true;
+      }
+    }
+
+    // ── Named locations ───────────────────────────────────────────────────
+    if (!matched) {
+      for (const { key, info } of namedKeys) {
+        if (remaining.toLowerCase().startsWith(key.toLowerCase())) {
+          segments.push({ kind: 'place', text: remaining.slice(0, key.length), info });
+          remaining = remaining.slice(key.length);
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    // ── Plain text: consume until the next potential match ────────────────
+    if (!matched) {
+      // Consume one character at a time until something matches at the head
+      let textEnd = 1;
+      while (textEnd < remaining.length) {
+        const rest = remaining.slice(textEnd);
+        const wouldMatch =
+          /^Routes?\s+\d/i.test(rest) ||
+          namedKeys.some((e) => rest.toLowerCase().startsWith(e.key.toLowerCase()));
+        if (wouldMatch) break;
+        textEnd++;
+      }
+      const last = segments[segments.length - 1];
+      if (last && last.kind === 'text') {
+        last.text += remaining.slice(0, textEnd);
+      } else {
+        segments.push({ kind: 'text', text: remaining.slice(0, textEnd) });
+      }
+      remaining = remaining.slice(textEnd);
+    }
   }
-  return null;
+
+  return segments;
 }
