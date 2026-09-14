@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
@@ -234,6 +234,21 @@ function PlaceTooltip({
   info: KantoLocationInfo;
   versionColor: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLSpanElement>(null);
+
+  // Close when the user touches outside the trigger element
+  useEffect(() => {
+    if (!open) return;
+    function handleOutsideTouch(e: TouchEvent) {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('touchstart', handleOutsideTouch);
+    return () => document.removeEventListener('touchstart', handleOutsideTouch);
+  }, [open]);
+
   const tooltipContent = (
     <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
       <Box
@@ -278,8 +293,12 @@ function PlaceTooltip({
       title={tooltipContent}
       placement="right"
       arrow
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       enterDelay={150}
       enterNextDelay={80}
+      disableTouchListener
       componentsProps={{
         tooltip: {
           sx: {
@@ -295,11 +314,17 @@ function PlaceTooltip({
       }}
     >
       <Box
+        ref={triggerRef}
         component="span"
+        onTouchStart={(e) => {
+          e.preventDefault(); // prevent long-press context menu / mouse event synthesis
+          setOpen((prev) => !prev);
+        }}
         sx={{
           cursor: 'help',
           borderBottom: '1px dashed rgba(255,255,255,0.35)',
-          color: 'text.primary',
+          color: open ? versionColor : 'text.primary',
+          borderBottomColor: open ? versionColor : 'rgba(255,255,255,0.35)',
           '&:hover': { color: versionColor, borderBottomColor: versionColor },
           transition: 'color 0.1s, border-color 0.1s',
         }}
