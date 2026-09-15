@@ -155,7 +155,7 @@ export const KANTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
 
 /**
  * Lookup table: canonical location keyword → Pokéarth info (Johto).
- * Image pattern: https://www.serebii.net/pokearth/maps/johto-gsc/{mapNum}.png
+ * Image pattern: https://www.serebii.net/pokearth/maps/johto2nd/{mapNum}.png
  */
 export const JOHTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = [
   // ── Johto Routes ────────────────────────────────────────────────────────────
@@ -177,38 +177,36 @@ export const JOHTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Route 44',          info: { slug: 'route44',         mapNum: 16,  label: 'Route 44',          region: 'johto' } },
   { key: 'Route 45',          info: { slug: 'route45',         mapNum: 17,  label: 'Route 45',          region: 'johto' } },
   { key: 'Route 46',          info: { slug: 'route46',         mapNum: 18,  label: 'Route 46',          region: 'johto' } },
-  { key: 'Route 47',          info: { slug: 'route47',         mapNum: 19,  label: 'Route 47',          region: 'johto' } },
-  { key: 'Route 48',          info: { slug: 'route48',         mapNum: 20,  label: 'Route 48',          region: 'johto' } },
 
   // ── Johto Cities / Towns ─────────────────────────────────────────────────────
-  { key: 'New Bark Town',      info: { slug: 'newbarktown',     mapNum: 21,  label: 'New Bark Town',     region: 'johto' } },
-  { key: 'Cherrygrove City',   info: { slug: 'cherrygrove',     mapNum: 22,  label: 'Cherrygrove City',  region: 'johto' } },
-  { key: 'Violet City',        info: { slug: 'violetcity',      mapNum: 23,  label: 'Violet City',       region: 'johto' } },
-  { key: 'Azalea Town',        info: { slug: 'azaleatown',      mapNum: 24,  label: 'Azalea Town',       region: 'johto' } },
-  { key: 'Goldenrod City',     info: { slug: 'goldenrod',       mapNum: 25,  label: 'Goldenrod City',    region: 'johto' } },
-  { key: 'Ecruteak City',      info: { slug: 'ecruteak',        mapNum: 26,  label: 'Ecruteak City',     region: 'johto' } },
-  { key: 'Olivine City',       info: { slug: 'olivinecity',     mapNum: 27,  label: 'Olivine City',      region: 'johto' } },
-  { key: 'Cianwood City',      info: { slug: 'cianwood',        mapNum: 28,  label: 'Cianwood City',     region: 'johto' } },
-  { key: 'Mahogany Town',      info: { slug: 'mahoganytown',    mapNum: 29,  label: 'Mahogany Town',     region: 'johto' } },
-  { key: 'Blackthorn City',    info: { slug: 'blackthorn',      mapNum: 30,  label: 'Blackthorn City',   region: 'johto' } },
+  { key: 'New Bark Town',      info: { slug: 'newbarktown',     mapNum: 19,  label: 'New Bark Town',     region: 'johto' } },
+  { key: 'Cherrygrove City',   info: { slug: 'cherrygrovecity', mapNum: 20,  label: 'Cherrygrove City',  region: 'johto' } },
+  { key: 'Violet City',        info: { slug: 'violetcity',      mapNum: 21,  label: 'Violet City',       region: 'johto' } },
+  { key: 'Azalea Town',        info: { slug: 'azaleatown',      mapNum: 22,  label: 'Azalea Town',       region: 'johto' } },
+  { key: 'Goldenrod City',     info: { slug: 'goldenrodcity',   mapNum: 23,  label: 'Goldenrod City',    region: 'johto' } },
+  { key: 'Ecruteak City',      info: { slug: 'ecruteakcity',    mapNum: 24,  label: 'Ecruteak City',     region: 'johto' } },
+  { key: 'Olivine City',       info: { slug: 'olivinecity',     mapNum: 25,  label: 'Olivine City',      region: 'johto' } },
+  { key: 'Cianwood City',      info: { slug: 'cianwoodcity',    mapNum: 26,  label: 'Cianwood City',     region: 'johto' } },
+  { key: 'Blackthorn City',    info: { slug: 'blackthorncity',  mapNum: 27,  label: 'Blackthorn City',   region: 'johto' } },
+  { key: 'Mahogany Town',      info: { slug: 'mahoganytown',    mapNum: 49,  label: 'Mahogany Town',     region: 'johto' } },
 
   // ── Johto Dungeons / Special Areas ──────────────────────────────────────────
-  { key: 'Sprout Tower',       info: { slug: 'sprouttower',     mapNum: 31,  label: 'Sprout Tower',      region: 'johto' } },
-  { key: 'Ruins of Alph',      info: { slug: 'ruinsofalph',     mapNum: 32,  label: 'Ruins of Alph',     region: 'johto' } },
-  { key: 'Union Cave',         info: { slug: 'unioncave',       mapNum: 33,  label: 'Union Cave',        region: 'johto' } },
-  { key: 'Slowpoke Well',      info: { slug: 'slowpokewell',    mapNum: 34,  label: 'Slowpoke Well',     region: 'johto' } },
-  { key: 'Ilex Forest',        info: { slug: 'ilexforest',      mapNum: 35,  label: 'Ilex Forest',       region: 'johto' } },
-  { key: 'National Park',      info: { slug: 'nationalpark',    mapNum: 36,  label: 'National Park',     region: 'johto' } },
+  { key: 'Sprout Tower',       info: { slug: 'sprouttower',     mapNum: 28,  label: 'Sprout Tower',      region: 'johto' } },
+  { key: 'Ruins of Alph',      info: { slug: 'ruinsofalph',     mapNum: 29,  label: 'Ruins of Alph',     region: 'johto' } },
+  { key: 'Slowpoke Well',      info: { slug: 'slowpokewell',    mapNum: 30,  label: 'Slowpoke Well',     region: 'johto' } },
+  { key: 'Union Cave',         info: { slug: 'unioncave',       mapNum: 31,  label: 'Union Cave',        region: 'johto' } },
+  { key: 'Ilex Forest',        info: { slug: 'ilexforest',      mapNum: 32,  label: 'Ilex Forest',       region: 'johto' } },
+  { key: 'National Park',      info: { slug: 'nationalpark',    mapNum: 34,  label: 'National Park',     region: 'johto' } },
+  { key: 'Mt. Mortar',         info: { slug: 'mt.mortar',       mapNum: 35,  label: 'Mt. Mortar',        region: 'johto' } },
+  { key: 'Tin Tower',          info: { slug: 'tintower',        mapNum: 36,  label: 'Tin Tower',         region: 'johto' } },
   { key: 'Burned Tower',       info: { slug: 'burnedtower',     mapNum: 37,  label: 'Burned Tower',      region: 'johto' } },
-  { key: 'Tin Tower',          info: { slug: 'tintower',        mapNum: 38,  label: 'Tin Tower',         region: 'johto' } },
+  { key: 'Dark Cave',          info: { slug: 'darkcave',        mapNum: 38,  label: 'Dark Cave',         region: 'johto' } },
   { key: 'Whirl Islands',      info: { slug: 'whirlislands',    mapNum: 39,  label: 'Whirl Islands',     region: 'johto' } },
-  { key: 'Mt. Mortar',         info: { slug: 'mtmortar',        mapNum: 40,  label: 'Mt. Mortar',        region: 'johto' } },
-  { key: 'Ice Path',           info: { slug: 'icepath',         mapNum: 41,  label: 'Ice Path',          region: 'johto' } },
-  { key: 'Dragon\'s Den',      info: { slug: 'dragonsden',      mapNum: 42,  label: "Dragon's Den",      region: 'johto' } },
-  { key: 'Dragons Den',        info: { slug: 'dragonsden',      mapNum: 42,  label: "Dragon's Den",      region: 'johto' } },
-  { key: 'Mt. Silver',         info: { slug: 'mtsilver',        mapNum: 43,  label: 'Mt. Silver',        region: 'johto' } },
-  { key: 'Dark Cave',          info: { slug: 'darkcave',        mapNum: 44,  label: 'Dark Cave',         region: 'johto' } },
-  { key: 'Lake of Rage',       info: { slug: 'lakeofrage',      mapNum: 45,  label: 'Lake of Rage',      region: 'johto' } },
+  { key: 'Dragon\'s Den',      info: { slug: "dragon'sden",     mapNum: 41,  label: "Dragon's Den",      region: 'johto' } },
+  { key: 'Dragons Den',        info: { slug: "dragon'sden",     mapNum: 41,  label: "Dragon's Den",      region: 'johto' } },
+  { key: 'Lake of Rage',       info: { slug: 'lakeofrage',      mapNum: 42,  label: 'Lake of Rage',      region: 'johto' } },
+  { key: 'Ice Path',           info: { slug: 'icepath',         mapNum: 43,  label: 'Ice Path',          region: 'johto' } },
+  { key: 'Mt. Silver',         info: { slug: 'mt.silver',       mapNum: 44,  label: 'Mt. Silver',        region: 'johto' } },
 ];
 
 /** Combined lookup of all locations (Kanto + Johto) */
@@ -231,7 +229,7 @@ export function mapImageUrl(mapNum: number): string {
 
 /** Build the GSC map image URL for a Johto map number */
 export function mapImageJohtoUrl(mapNum: number): string {
-  return `https://www.serebii.net/pokearth/maps/johto-gsc/${mapNum}.png`;
+  return `https://www.serebii.net/pokearth/maps/johto2nd/${mapNum}.png`;
 }
 
 // ─── Route number lookup ──────────────────────────────────────────────────────
