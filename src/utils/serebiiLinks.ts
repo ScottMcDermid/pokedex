@@ -21,7 +21,7 @@ export function yellowSpriteUrl(id: number): string {
 
 /** Gold/Silver sprite URL */
 export function gsSpriteUrl(id: number): string {
-  return `https://www.serebii.net/pokearth/sprites/gs/${padId(id)}.png`;
+  return `https://www.serebii.net/pokearth/sprites/gold/${padId(id)}.png`;
 }
 
 /** Crystal sprite URL */

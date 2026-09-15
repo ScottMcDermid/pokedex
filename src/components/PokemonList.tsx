@@ -14,7 +14,7 @@ import Image from 'next/image';
 
 import { PokemonDefinition } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
-import { rbSpriteUrl, padId } from '@/utils/serebiiLinks';
+import { rbSpriteUrl, gsSpriteUrl, padId } from '@/utils/serebiiLinks';
 
 const ROW_HEIGHT = 60;
 
@@ -76,7 +76,7 @@ function PokemonRow({
 
       <Box sx={{ width: 36, height: 36, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          src={rbSpriteUrl(p.id)}
+          src={p.generation === 2 ? gsSpriteUrl(p.id) : rbSpriteUrl(p.id)}
           alt={p.name}
           width={36}
           height={36}
