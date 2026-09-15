@@ -8,13 +8,17 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import Image from 'next/image';
 
 import { PokemonDefinition } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
 import { rbSpriteUrl, gsSpriteUrl, padId } from '@/utils/serebiiLinks';
+import { usePokemonTracker, CatchStatus } from '@/data/pokemonStore';
 
 const ROW_HEIGHT = 60;
 
@@ -33,19 +37,38 @@ export interface PokemonListHandle {
   scrollToIndex: (index: number) => void;
 }
 
+const STATUS_ICON: Record<CatchStatus, React.ElementType | null> = {
+  none: null,
+  seen: VisibilityIcon,
+  caught: CatchingPokemonIcon,
+};
+const STATUS_COLOR: Record<CatchStatus, string> = {
+  none: 'transparent',
+  seen: '#f59e0b',
+  caught: '#22c55e',
+};
+const STATUS_LABEL: Record<CatchStatus, string> = {
+  none: '',
+  seen: 'Seen',
+  caught: 'Caught',
+};
+
 function PokemonRow({
   style,
   pokemon,
   isSelected,
+  catchStatus,
   onSelect,
 }: {
   index?: number;
   style: React.CSSProperties;
   pokemon: PokemonDefinition;
   isSelected: boolean;
+  catchStatus: CatchStatus;
   onSelect: (id: number) => void;
 }) {
   const p = pokemon;
+  const StatusIcon = STATUS_ICON[catchStatus];
 
   return (
     <Box
@@ -103,6 +126,14 @@ function PokemonRow({
           ))}
         </Box>
       </Box>
+
+      {StatusIcon && (
+        <Tooltip title={STATUS_LABEL[catchStatus]} placement="left" arrow>
+          <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+            <StatusIcon sx={{ fontSize: 14, color: STATUS_COLOR[catchStatus] }} />
+          </Box>
+        </Tooltip>
+      )}
     </Box>
   );
 }
@@ -122,6 +153,7 @@ const PokemonList = forwardRef<PokemonListHandle, PokemonListProps>(
   ) => {
     const searchRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<ListImperativeAPI | null>(null);
+    const statuses = usePokemonTracker((s) => s.statuses);
 
     useImperativeHandle(ref, () => ({
       focusSearch: () => searchRef.current?.focus(),
@@ -154,11 +186,12 @@ const PokemonList = forwardRef<PokemonListHandle, PokemonListProps>(
             style={style}
             pokemon={p}
             isSelected={p.id === selectedId}
+            catchStatus={statuses[p.id] ?? 'none'}
             onSelect={onSelectPokemon}
           />
         );
       },
-      [pokemon, selectedId, onSelectPokemon],
+      [pokemon, selectedId, statuses, onSelectPokemon],
     );
 
     return (

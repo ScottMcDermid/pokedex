@@ -1,7 +1,49 @@
 'use client';
 
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { PokemonType, GameVersion, ALL_TYPES, ALL_VERSIONS } from '@/utils/pokemonTypes';
+
+// ─── Tracker ──────────────────────────────────────────────────────────────────
+
+export type CatchStatus = 'none' | 'seen' | 'caught';
+
+/** Cycles none → seen → caught → none */
+export function nextCatchStatus(current: CatchStatus): CatchStatus {
+  if (current === 'none') return 'seen';
+  if (current === 'seen') return 'caught';
+  return 'none';
+}
+
+interface PokemonTrackerState {
+  statuses: Record<number, CatchStatus>;
+  setStatus: (id: number, status: CatchStatus) => void;
+  cycleStatus: (id: number) => void;
+}
+
+export const usePokemonTracker = create<PokemonTrackerState>()(
+  persist(
+    (set, get) => ({
+      statuses: {},
+
+      setStatus: (id, status) =>
+        set((state) => ({
+          statuses: { ...state.statuses, [id]: status },
+        })),
+
+      cycleStatus: (id) => {
+        const current = get().statuses[id] ?? 'none';
+        const next = nextCatchStatus(current);
+        set((state) => ({
+          statuses: { ...state.statuses, [id]: next },
+        }));
+      },
+    }),
+    { name: 'pokedex-tracker' },
+  ),
+);
+
+// ─── Filters ──────────────────────────────────────────────────────────────────
 
 interface PokemonFilterState {
   typeFilters: PokemonType[];

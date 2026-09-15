@@ -14,9 +14,15 @@ import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MapIcon from '@mui/icons-material/Map';
 import Image from 'next/image';
+
+import { usePokemonTracker, CatchStatus } from '@/data/pokemonStore';
 
 import { PokemonDefinition, LearnedMove, TmMove } from '@/utils/pokemonTypes';
 import { TYPE_COLORS } from '@/utils/pokemonTypes';
@@ -414,6 +420,63 @@ function PlaceTooltip({
   );
 }
 
+// ─── CatchToggleButton ────────────────────────────────────────────────────────
+
+const STATUS_CONFIG: Record<CatchStatus, { label: string; color: string; bg: string; border: string; Icon: React.ElementType }> = {
+  none: {
+    label: 'Not seen',
+    color: '#9ca3af',
+    bg: 'rgba(156,163,175,0.08)',
+    border: 'rgba(156,163,175,0.25)',
+    Icon: RemoveCircleOutlineIcon,
+  },
+  seen: {
+    label: 'Seen',
+    color: '#f59e0b',
+    bg: 'rgba(245,158,11,0.12)',
+    border: 'rgba(245,158,11,0.4)',
+    Icon: VisibilityIcon,
+  },
+  caught: {
+    label: 'Caught',
+    color: '#22c55e',
+    bg: 'rgba(34,197,94,0.12)',
+    border: 'rgba(34,197,94,0.4)',
+    Icon: CatchingPokemonIcon,
+  },
+};
+
+function CatchToggleButton({ pokemonId }: { pokemonId: number }) {
+  const cycleStatus = usePokemonTracker((s) => s.cycleStatus);
+  const status: CatchStatus = usePokemonTracker((s) => s.statuses[pokemonId] ?? 'none');
+  const cfg = STATUS_CONFIG[status];
+  const { Icon } = cfg;
+
+  return (
+    <Button
+      size="small"
+      onClick={() => cycleStatus(pokemonId)}
+      startIcon={<Icon sx={{ fontSize: '0.95rem !important' }} />}
+      sx={{
+        color: cfg.color,
+        backgroundColor: cfg.bg,
+        border: `1px solid ${cfg.border}`,
+        borderRadius: 1,
+        fontSize: '0.72rem',
+        fontWeight: 600,
+        textTransform: 'none',
+        px: 1.25,
+        py: 0.4,
+        minWidth: 0,
+        '&:hover': { backgroundColor: cfg.bg, filter: 'brightness(1.15)' },
+        transition: 'color 0.15s, background-color 0.15s, border-color 0.15s',
+      }}
+    >
+      {cfg.label}
+    </Button>
+  );
+}
+
 /** Map game version to display color */
 const VERSION_COLOR: Record<string, string> = {
   Red: '#cc0000',
@@ -490,7 +553,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
 
         {/* Info */}
         <Box>
-          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
             <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace', fontSize: '0.9rem' }}>
               #{padId(pokemon.id)}
             </Typography>
@@ -504,6 +567,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
               size="small"
               sx={{ height: 16, fontSize: '0.6rem', backgroundColor: isGen2 ? '#b8860b' : '#cc0000', color: '#fff', '& .MuiChip-label': { px: 0.75 } }}
             />
+            <CatchToggleButton pokemonId={pokemon.id} />
           </Box>
           <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 0.25 }}>
             {pokemon.classification}
