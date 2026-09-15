@@ -23,7 +23,24 @@ import { TYPE_COLORS } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
 import { moves } from '@/data/moves';
 import { pokemonById } from '@/data/pokemon';
-import { rbSpriteUrl, yellowSpriteUrl, artUrl, padId, pokedexUrl, attackdexUrl, pokEarthUrl, mapImageUrl, tokenizeLocation, KantoLocationInfo } from '@/utils/serebiiLinks';
+import {
+  rbSpriteUrl,
+  yellowSpriteUrl,
+  gsSpriteUrl,
+  crystalSpriteUrl,
+  artUrl,
+  padId,
+  pokedexUrl,
+  pokedexGSUrl,
+  attackdexUrl,
+  attackdexGSUrl,
+  pokEarthUrl,
+  pokEarthJohtoUrl,
+  mapImageUrl,
+  mapImageJohtoUrl,
+  tokenizeLocation,
+  KantoLocationInfo,
+} from '@/utils/serebiiLinks';
 
 interface PokemonDetailProps {
   pokemon: PokemonDefinition;
@@ -45,7 +62,7 @@ function StatBar({ value, max = 250 }: { value: number; max?: number }) {
   );
 }
 
-function MoveRow({ entry, isLevelUp }: { entry: LearnedMove | TmMove; isLevelUp?: boolean }) {
+function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLevelUp?: boolean; gen: 1 | 2 }) {
   const moveName = 'move' in entry ? entry.move : '';
   const moveData = moves[moveName];
 
@@ -63,6 +80,8 @@ function MoveRow({ entry, isLevelUp }: { entry: LearnedMove | TmMove; isLevelUp?
 
   const typeColor = TYPE_COLORS[moveData.type];
   const yellowOnly = 'yellowOnly' in entry && entry.yellowOnly;
+  const crystalOnly = 'crystalOnly' in entry && entry.crystalOnly;
+  const attackLink = gen === 2 ? attackdexGSUrl(moveData.name) : attackdexUrl(moveData.name);
 
   return (
     <TableRow sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' } }}>
@@ -76,13 +95,16 @@ function MoveRow({ entry, isLevelUp }: { entry: LearnedMove | TmMove; isLevelUp?
                 {yellowOnly && (
                   <Chip label="Yellow" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#f8d030', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
                 )}
+                {crystalOnly && (
+                  <Chip label="Crystal" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#4fc3f7', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
+                )}
               </Box>
             ) : '—')
         }
       </TableCell>
       {/* Move name */}
       <TableCell>
-        <Link href={attackdexUrl(moveData.name)} target="_blank" rel="noreferrer" underline="hover" sx={{ color: '#e5e7eb', fontSize: '0.75rem' }}>
+        <Link href={attackLink} target="_blank" rel="noreferrer" underline="hover" sx={{ color: '#e5e7eb', fontSize: '0.75rem' }}>
           {moveData.name}
         </Link>
       </TableCell>
@@ -121,7 +143,7 @@ interface EvolutionThreshold {
   name: string;
 }
 
-function MoveTable({ entries, isLevelUp, evolutionThresholds }: { entries: (LearnedMove | TmMove)[]; isLevelUp?: boolean; evolutionThresholds?: EvolutionThreshold[] }) {
+function MoveTable({ entries, isLevelUp, evolutionThresholds, gen }: { entries: (LearnedMove | TmMove)[]; isLevelUp?: boolean; evolutionThresholds?: EvolutionThreshold[]; gen: 1 | 2 }) {
   // Track which evolution thresholds have already been inserted
   const insertedThresholds = new Set<number>();
 
@@ -185,7 +207,7 @@ function MoveTable({ entries, isLevelUp, evolutionThresholds }: { entries: (Lear
             return (
               <React.Fragment key={i}>
                 {dividers}
-                <MoveRow entry={entry} isLevelUp={isLevelUp} />
+                <MoveRow entry={entry} isLevelUp={isLevelUp} gen={gen} />
               </React.Fragment>
             );
           })}
@@ -230,6 +252,7 @@ function EvolutionChain({ pokemon, onNavigate }: { pokemon: PokemonDefinition; o
     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
       {chain.map((p, i) => {
         const evoInfo = i > 0 ? chain[i - 1].evolvesTo?.find((e) => e.id === p.id) : null;
+        const spriteUrl = p.generation === 2 ? gsSpriteUrl(p.id) : rbSpriteUrl(p.id);
         return (
           <React.Fragment key={p.id}>
             {i > 0 && (
@@ -240,6 +263,8 @@ function EvolutionChain({ pokemon, onNavigate }: { pokemon: PokemonDefinition; o
                     {evoInfo.method === 'level' && `Lv. ${evoInfo.level}`}
                     {evoInfo.method === 'stone' && evoInfo.stone}
                     {evoInfo.method === 'trade' && 'Trade'}
+                    {evoInfo.method === 'friendship' && (evoInfo.time ? `Friendship (${evoInfo.time})` : 'Friendship')}
+                    {evoInfo.method === 'item' && evoInfo.item}
                   </Typography>
                 )}
               </Box>
@@ -259,7 +284,7 @@ function EvolutionChain({ pokemon, onNavigate }: { pokemon: PokemonDefinition; o
                 '&:hover': { backgroundColor: 'rgba(255,255,255,0.07)' },
               }}
             >
-              <Image src={rbSpriteUrl(p.id)} alt={p.name} width={48} height={48} style={{ imageRendering: 'pixelated' }} unoptimized />
+              <Image src={spriteUrl} alt={p.name} width={48} height={48} style={{ imageRendering: 'pixelated' }} unoptimized />
               <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>
                 #{padId(p.id)}
               </Typography>
@@ -300,6 +325,10 @@ function PlaceTooltip({
     return () => document.removeEventListener('touchstart', handleOutsideTouch);
   }, [open]);
 
+  const isJohto = info.region === 'johto';
+  const earthUrl = isJohto ? pokEarthJohtoUrl(info.slug) : pokEarthUrl(info.slug);
+  const imgUrl = isJohto ? mapImageJohtoUrl(info.mapNum) : mapImageUrl(info.mapNum);
+
   const tooltipContent = (
     <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
       <Box
@@ -315,7 +344,7 @@ function PlaceTooltip({
         }}
       >
         <Image
-          src={mapImageUrl(info.mapNum)}
+          src={imgUrl}
           alt={info.label}
           fill
           style={{ objectFit: 'contain', imageRendering: 'pixelated' }}
@@ -327,7 +356,7 @@ function PlaceTooltip({
           {info.label}
         </Typography>
         <Link
-          href={pokEarthUrl(info.slug)}
+          href={earthUrl}
           target="_blank"
           rel="noreferrer"
           sx={{ display: 'flex', alignItems: 'center', gap: 0.25, fontSize: '0.8rem', color: versionColor, whiteSpace: 'nowrap' }}
@@ -386,13 +415,33 @@ function PlaceTooltip({
   );
 }
 
-export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProps) {
-  const hasYellowLearnset = !!pokemon.learnsetYellow;
-  const [learnsetTab, setLearnsetTab] = useState<'rb' | 'yellow'>('rb');
+/** Map game version to display color */
+const VERSION_COLOR: Record<string, string> = {
+  Red: '#cc0000',
+  Blue: '#3b5998',
+  Yellow: '#f8d030',
+  Gold: '#b8860b',
+  Silver: '#708090',
+  Crystal: '#4fc3f7',
+};
 
-  const activeLearnset = learnsetTab === 'yellow' && pokemon.learnsetYellow
-    ? pokemon.learnsetYellow
+/** Map game version to text color (dark versions need dark text) */
+function versionTextColor(version: string): string {
+  return version === 'Yellow' ? '#000' : '#fff';
+}
+
+export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProps) {
+  const gen: 1 | 2 = pokemon.generation ?? 1;
+  const isGen2 = gen === 2;
+
+  const hasAltLearnset = isGen2 ? !!pokemon.learnsetCrystal : !!pokemon.learnsetYellow;
+  const [learnsetTab, setLearnsetTab] = useState<'main' | 'alt'>('main');
+
+  const activeLearnset = learnsetTab === 'alt'
+    ? (isGen2 ? (pokemon.learnsetCrystal ?? pokemon.learnsetRB) : (pokemon.learnsetYellow ?? pokemon.learnsetRB))
     : pokemon.learnsetRB;
+
+  const dexUrl = isGen2 ? pokedexGSUrl(pokemon.id) : pokedexUrl(pokemon.id);
 
   const SectionHeader = ({ title }: { title: string }) => (
     <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#cc0000', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '0.7rem', mb: 1 }}>
@@ -415,14 +464,29 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'flex-start' }}>
         {/* Sprites */}
         <Box sx={{ display: 'flex', gap: 2, flexShrink: 0 }}>
-          <Box sx={{ textAlign: 'center' }}>
-            <Image src={rbSpriteUrl(pokemon.id)} alt={`${pokemon.name} RB`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
-            <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Red/Blue</Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Image src={yellowSpriteUrl(pokemon.id)} alt={`${pokemon.name} Yellow`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
-            <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Yellow</Typography>
-          </Box>
+          {isGen2 ? (
+            <>
+              <Box sx={{ textAlign: 'center' }}>
+                <Image src={gsSpriteUrl(pokemon.id)} alt={`${pokemon.name} GS`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Gold/Silver</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Image src={crystalSpriteUrl(pokemon.id)} alt={`${pokemon.name} Crystal`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Crystal</Typography>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Box sx={{ textAlign: 'center' }}>
+                <Image src={rbSpriteUrl(pokemon.id)} alt={`${pokemon.name} RB`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Red/Blue</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Image src={yellowSpriteUrl(pokemon.id)} alt={`${pokemon.name} Yellow`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Yellow</Typography>
+              </Box>
+            </>
+          )}
           <Box sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}>
             <Image src={artUrl(pokemon.id)} alt={`${pokemon.name} art`} width={80} height={80} style={{ objectFit: 'contain' }} unoptimized />
             <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Art</Typography>
@@ -436,10 +500,15 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
               #{padId(pokemon.id)}
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1 }}>
-              <Link href={pokedexUrl(pokemon.id)} target="_blank" rel="noreferrer" underline="hover" sx={{ color: 'inherit' }}>
+              <Link href={dexUrl} target="_blank" rel="noreferrer" underline="hover" sx={{ color: 'inherit' }}>
                 {pokemon.name}
               </Link>
             </Typography>
+            <Chip
+              label={`Gen ${gen}`}
+              size="small"
+              sx={{ height: 16, fontSize: '0.6rem', backgroundColor: isGen2 ? '#b8860b' : '#cc0000', color: '#fff', '& .MuiChip-label': { px: 0.75 } }}
+            />
           </Box>
           <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 0.25 }}>
             {pokemon.classification}
@@ -468,21 +537,41 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
       {/* ── Base Stats ── */}
       <Box>
         <SectionHeader title="Base Stats" />
-        <Box sx={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: 0.5, maxWidth: 340 }}>
-          {[
-            ['HP', pokemon.baseStats.hp],
-            ['Attack', pokemon.baseStats.attack],
-            ['Defense', pokemon.baseStats.defense],
-            ['Special', pokemon.baseStats.special],
-            ['Speed', pokemon.baseStats.speed],
-          ].map(([label, val]) => (
-            <React.Fragment key={label as string}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', alignSelf: 'center' }}>
-                {label}
-              </Typography>
-              <StatBar value={val as number} max={label === 'HP' ? 255 : 180} />
-            </React.Fragment>
-          ))}
+        <Box sx={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 0.5, maxWidth: 340 }}>
+          {isGen2 ? (
+            // Gen 2: split special stats
+            [
+              ['HP', pokemon.baseStats.hp],
+              ['Attack', pokemon.baseStats.attack],
+              ['Defense', pokemon.baseStats.defense],
+              ['Sp. Atk', pokemon.baseStats.spAttack],
+              ['Sp. Def', pokemon.baseStats.spDefense],
+              ['Speed', pokemon.baseStats.speed],
+            ].map(([label, val]) => (
+              <React.Fragment key={label as string}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', alignSelf: 'center' }}>
+                  {label}
+                </Typography>
+                <StatBar value={(val ?? 0) as number} max={label === 'HP' ? 255 : 180} />
+              </React.Fragment>
+            ))
+          ) : (
+            // Gen 1: single Special stat
+            [
+              ['HP', pokemon.baseStats.hp],
+              ['Attack', pokemon.baseStats.attack],
+              ['Defense', pokemon.baseStats.defense],
+              ['Special', pokemon.baseStats.special],
+              ['Speed', pokemon.baseStats.speed],
+            ].map(([label, val]) => (
+              <React.Fragment key={label as string}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem', alignSelf: 'center' }}>
+                  {label}
+                </Typography>
+                <StatBar value={(val ?? 0) as number} max={label === 'HP' ? 255 : 180} />
+              </React.Fragment>
+            ))
+          )}
         </Box>
       </Box>
 
@@ -501,8 +590,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
         <SectionHeader title="Version Availability & Locations" />
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
           {pokemon.locations.map((loc) => {
-            const versionColor =
-              loc.version === 'Red' ? '#cc0000' : loc.version === 'Blue' ? '#3b5998' : '#f8d030';
+            const versionColor = VERSION_COLOR[loc.version] ?? '#888';
             const segments = tokenizeLocation(loc.location);
 
             return (
@@ -517,7 +605,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
                     fontSize: '0.65rem',
                     fontWeight: 700,
                     backgroundColor: versionColor,
-                    color: loc.version === 'Yellow' ? '#000' : '#fff',
+                    color: versionTextColor(loc.version),
                     '& .MuiChip-label': { px: 0.75 },
                     borderRadius: 0.5,
                     mt: '2px',
@@ -553,17 +641,17 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
       <Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
           <SectionHeader title="Level-Up Moves" />
-          {hasYellowLearnset && (
+          {hasAltLearnset && (
             <Tabs
               value={learnsetTab}
               onChange={(_, v) => setLearnsetTab(v)}
               sx={{ minHeight: 28, '& .MuiTab-root': { minHeight: 28, py: 0, fontSize: '0.72rem' } }}
             >
-              <Tab label="Red/Blue" value="rb" />
-              <Tab label="Yellow" value="yellow" />
+              <Tab label={isGen2 ? 'Gold/Silver' : 'Red/Blue'} value="main" />
+              <Tab label={isGen2 ? 'Crystal' : 'Yellow'} value="alt" />
             </Tabs>
           )}
-          {!hasYellowLearnset && (
+          {!hasAltLearnset && (
             <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
               (same in all versions)
             </Typography>
@@ -572,6 +660,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
         <MoveTable
           entries={activeLearnset}
           isLevelUp
+          gen={gen}
           evolutionThresholds={
             pokemon.evolvesTo
               ?.filter((e) => e.method === 'level' && e.level != null)
@@ -590,7 +679,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
             Cannot learn any TMs or HMs.
           </Typography>
         ) : (
-          <MoveTable entries={pokemon.tmMoves} isLevelUp={false} />
+          <MoveTable entries={pokemon.tmMoves} isLevelUp={false} gen={gen} />
         )}
       </Box>
 
@@ -603,13 +692,14 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
               {pokemon.specialMoves.map((moveName) => {
                 const move = moves[moveName];
+                const attackLink = isGen2 ? attackdexGSUrl(moveName) : attackdexUrl(moveName);
                 return (
                   <Chip
                     key={moveName}
                     label={moveName}
                     size="small"
                     component="a"
-                    href={attackdexUrl(moveName)}
+                    href={attackLink}
                     target="_blank"
                     rel="noreferrer"
                     clickable

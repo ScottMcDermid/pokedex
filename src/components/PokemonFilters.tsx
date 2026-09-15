@@ -20,6 +20,9 @@ const VERSION_COLORS: Record<GameVersion, string> = {
   Red: '#cc0000',
   Blue: '#3b5998',
   Yellow: '#f8d030',
+  Gold: '#b8860b',
+  Silver: '#708090',
+  Crystal: '#4fc3f7',
 };
 
 export default function PokemonFilters({
@@ -83,6 +86,7 @@ export default function PokemonFilters({
                   height: 24,
                   backgroundColor: active ? color : 'rgba(255,255,255,0.08)',
                   color: active ? (version === 'Yellow' ? '#000' : '#fff') : 'text.secondary',
+                  // Crystal uses a light blue — keep white text for readability
                   fontWeight: active ? 700 : 400,
                   border: `1px solid ${active ? color : 'rgba(255,255,255,0.15)'}`,
                   '&:hover': { backgroundColor: active ? color : 'rgba(255,255,255,0.12)' },

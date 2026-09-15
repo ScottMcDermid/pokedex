@@ -15,7 +15,9 @@ export type PokemonType =
   | 'Bug'
   | 'Rock'
   | 'Ghost'
-  | 'Dragon';
+  | 'Dragon'
+  | 'Steel'
+  | 'Dark';
 
 export const ALL_TYPES: PokemonType[] = [
   'Normal',
@@ -33,6 +35,8 @@ export const ALL_TYPES: PokemonType[] = [
   'Rock',
   'Ghost',
   'Dragon',
+  'Steel',
+  'Dark',
 ];
 
 /** Standard Pokemon TCG palette colors for each type */
@@ -52,6 +56,8 @@ export const TYPE_COLORS: Record<PokemonType, string> = {
   Rock: '#b8a038',
   Ghost: '#705898',
   Dragon: '#7038f8',
+  Steel: '#b8b8d0',
+  Dark: '#705848',
 };
 
 // ─── Move types ───────────────────────────────────────────────────────────────
@@ -84,11 +90,13 @@ export interface TmMove {
   move: string;
   /** true if only learnable in Yellow version */
   yellowOnly?: boolean;
+  /** true if only learnable in Crystal version */
+  crystalOnly?: boolean;
 }
 
 // ─── Evolution types ──────────────────────────────────────────────────────────
 
-export type EvolutionMethod = 'level' | 'stone' | 'trade';
+export type EvolutionMethod = 'level' | 'stone' | 'trade' | 'friendship' | 'item';
 
 export interface EvolutionInfo {
   /** Target Pokemon ID */
@@ -98,13 +106,19 @@ export interface EvolutionInfo {
   level?: number;
   /** Stone name (for method: 'stone') e.g. "Thunder Stone" */
   stone?: string;
+  /** Item name (for method: 'item') e.g. "King's Rock" */
+  item?: string;
+  /** Time of day required e.g. "Day" | "Night" (for friendship/level evolutions) */
+  time?: 'Day' | 'Night';
+  /** Gender required e.g. "Female" (for some evolutions) */
+  gender?: 'Male' | 'Female';
 }
 
 // ─── Version / Location types ─────────────────────────────────────────────────
 
-export type GameVersion = 'Red' | 'Blue' | 'Yellow';
+export type GameVersion = 'Red' | 'Blue' | 'Yellow' | 'Gold' | 'Silver' | 'Crystal';
 
-export const ALL_VERSIONS: GameVersion[] = ['Red', 'Blue', 'Yellow'];
+export const ALL_VERSIONS: GameVersion[] = ['Red', 'Blue', 'Yellow', 'Gold', 'Silver', 'Crystal'];
 
 export interface VersionLocation {
   version: GameVersion;
@@ -118,9 +132,18 @@ export interface BaseStats {
   hp: number;
   attack: number;
   defense: number;
-  special: number;
+  /** Gen 1 combined special stat (null for Gen 2+ Pokemon) */
+  special?: number;
+  /** Gen 2+ special attack stat (null for Gen 1 Pokemon) */
+  spAttack?: number;
+  /** Gen 2+ special defense stat (null for Gen 1 Pokemon) */
+  spDefense?: number;
   speed: number;
 }
+
+// ─── Generation ───────────────────────────────────────────────────────────────
+
+export type Generation = 1 | 2;
 
 // ─── Main Pokemon Definition ──────────────────────────────────────────────────
 
@@ -132,17 +155,21 @@ export interface PokemonDefinition {
   height: string;
   weight: string;
   captureRate: number;
+  /** Generation this Pokemon was introduced in (defaults to 1 if omitted) */
+  generation?: Generation;
   baseStats: BaseStats;
 
-  /** Level-up learnset for Red/Blue */
+  /** Level-up learnset for Red/Blue (Gen 1) or Gold/Silver (Gen 2) */
   learnsetRB: LearnedMove[];
-  /** Level-up learnset for Yellow — only present when it differs from RB */
+  /** Level-up learnset for Yellow — only present when it differs from RB (Gen 1 only) */
   learnsetYellow?: LearnedMove[];
+  /** Level-up learnset for Crystal — only present when it differs from GS (Gen 2 only) */
+  learnsetCrystal?: LearnedMove[];
 
   /** TM and HM moves learnable */
   tmMoves: TmMove[];
 
-  /** Special moves (Stadium tutors, gift moves, etc.) */
+  /** Special moves (Stadium tutors, gift moves, Move Tutor moves, etc.) */
   specialMoves?: string[];
 
   /** What this Pokemon evolves from (undefined for base forms) */
@@ -151,6 +178,9 @@ export interface PokemonDefinition {
     method: EvolutionMethod;
     level?: number;
     stone?: string;
+    item?: string;
+    time?: 'Day' | 'Night';
+    gender?: 'Male' | 'Female';
   };
 
   /** What this Pokemon can evolve into (undefined for final forms) */

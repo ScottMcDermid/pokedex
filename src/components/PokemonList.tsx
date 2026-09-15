@@ -202,7 +202,7 @@ const PokemonList = forwardRef<PokemonListHandle, PokemonListProps>(
         {/* Count */}
         <Box sx={{ px: 1.5, py: 0.5, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
-            {pokemon.length} / 151 Pokémon
+            {pokemon.length} / 251 Pokémon
           </Typography>
         </Box>
 
