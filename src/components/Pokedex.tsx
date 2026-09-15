@@ -11,6 +11,8 @@ import Drawer from '@mui/material/Drawer';
 import Dialog from '@mui/material/Dialog';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import theme from '@/app/theme';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -94,6 +96,11 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
     [handleSelectPokemon],
   );
 
+  const handleMobileBack = useCallback(() => {
+    setMobileDetailOpen(false);
+    window.history.pushState({}, '', '/');
+  }, []);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -115,8 +122,10 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
       const match = window.location.pathname.match(/\/pokemon\/(\d+)/);
       if (match) {
         setSelectedId(parseInt(match[1], 10));
+        setMobileDetailOpen(true);
       } else {
         setSelectedId(null);
+        setMobileDetailOpen(false);
       }
     };
     window.addEventListener('popstate', handler);
@@ -217,10 +226,20 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
             open={mobileDetailOpen && selectedPokemon != null}
             onClose={() => setMobileDetailOpen(false)}
             sx={{ display: { md: 'none' } }}
-            PaperProps={{ sx: { width: '100%', maxWidth: 480, backgroundColor: 'background.default' } }}
+            PaperProps={{ sx: { width: '100%', maxWidth: 480, backgroundColor: 'background.default', display: 'flex', flexDirection: 'column' } }}
           >
+            <Box sx={{ display: 'flex', alignItems: 'center', px: 1, py: 0.5, borderBottom: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 }}>
+              <IconButton onClick={handleMobileBack} size="small" aria-label="Back to list" sx={{ color: 'text.primary' }}>
+                <ArrowBackIcon fontSize="small" />
+              </IconButton>
+              <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                Back to list
+              </Typography>
+            </Box>
             {selectedPokemon && (
-              <PokemonDetail pokemon={selectedPokemon} onNavigate={handleNavigateEvolution} />
+              <Box sx={{ flex: 1, overflow: 'auto' }}>
+                <PokemonDetail pokemon={selectedPokemon} onNavigate={handleNavigateEvolution} />
+              </Box>
             )}
           </Drawer>
 
