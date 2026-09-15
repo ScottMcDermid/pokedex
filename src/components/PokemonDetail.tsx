@@ -79,7 +79,8 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
 
   const isTm = !isLevelUp && 'tm' in entry;
   const tmKey = isTm ? (entry as TmMove).tm : null;
-  const tmInfo = tmKey ? (gen === 2 ? tmDataGen2[tmKey] : tmDataGen1[tmKey]) : null;
+  const tmInfoGen1 = tmKey ? tmDataGen1[tmKey] ?? null : null;
+  const tmInfoGen2 = tmKey ? tmDataGen2[tmKey] ?? null : null;
 
   const isExpandable = !!moveData;
 
@@ -180,15 +181,33 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
         <TableCell colSpan={8} sx={{ py: 0, border: 0 }}>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <Box sx={{ px: 1.5, py: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-              {isTm && tmInfo && (
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
-                  <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
-                  <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', lineHeight: 1.5 }}>
-                    {tmInfo.location}
-                  </Typography>
+              {isTm && (tmInfoGen1 || tmInfoGen2) && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                  {(
+                    [
+                      tmInfoGen1 ? { label: 'RB/Y', color: '#cc0000', info: tmInfoGen1 } : null,
+                      tmInfoGen2 ? { label: 'GS/C', color: '#b8860b', info: tmInfoGen2 } : null,
+                    ].filter((x): x is { label: string; color: string; info: typeof tmInfoGen1 & object } => x !== null)
+                  ).map(({ label, color, info }) => (
+                    <Box key={label} sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                      {info.location.split(' · ').map((loc, idx) => (
+                        <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                          <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
+                          <Chip
+                            label={label}
+                            size="small"
+                            sx={{ height: 14, fontSize: '0.55rem', backgroundColor: color, color: '#fff', flexShrink: 0, '& .MuiChip-label': { px: 0.5 } }}
+                          />
+                          <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', lineHeight: 1.5 }}>
+                            {loc}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  ))}
                 </Box>
               )}
-              <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', pl: isTm && tmInfo ? '1.55rem' : 0, lineHeight: 1.5 }}>
+              <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', pl: isTm && (tmInfoGen1 || tmInfoGen2) ? '1.55rem' : 0, lineHeight: 1.5 }}>
                 {moveData.description}
               </Typography>
             </Box>
