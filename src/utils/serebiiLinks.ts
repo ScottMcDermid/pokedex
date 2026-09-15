@@ -29,6 +29,14 @@ export function crystalSpriteUrl(id: number): string {
   return `https://www.serebii.net/pokearth/sprites/crystal/${padId(id)}.png`;
 }
 
+/**
+ * Sprite URL for a specific Unown form letter (A–Z).
+ * Uses Pokémon Database Crystal sprites.
+ */
+export function unownFormSpriteUrl(letter: string): string {
+  return `https://img.pokemondb.net/sprites/crystal/normal/unown-${letter.toLowerCase()}.png`;
+}
+
 /** Official art thumbnail URL (works for all gens) */
 export function artUrl(id: number): string {
   return `https://www.serebii.net/art/th/${id}.png`;

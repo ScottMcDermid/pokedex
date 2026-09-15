@@ -15,10 +15,16 @@ export function nextCatchStatus(current: CatchStatus): CatchStatus {
   return 'none';
 }
 
+/** All 26 Unown form letters (A–Z) */
+export const UNOWN_FORMS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('') as string[];
+
 interface PokemonTrackerState {
   statuses: Record<number, CatchStatus>;
   setStatus: (id: number, status: CatchStatus) => void;
   cycleStatus: (id: number) => void;
+  /** Per-form catch status for Unown (keyed by uppercase letter) */
+  unownFormStatuses: Record<string, CatchStatus>;
+  cycleUnownForm: (form: string) => void;
 }
 
 export const usePokemonTracker = create<PokemonTrackerState>()(
@@ -36,6 +42,16 @@ export const usePokemonTracker = create<PokemonTrackerState>()(
         const next = nextCatchStatus(current);
         set((state) => ({
           statuses: { ...state.statuses, [id]: next },
+        }));
+      },
+
+      unownFormStatuses: {},
+
+      cycleUnownForm: (form) => {
+        const current = get().unownFormStatuses[form] ?? 'none';
+        const next = nextCatchStatus(current);
+        set((state) => ({
+          unownFormStatuses: { ...state.unownFormStatuses, [form]: next },
         }));
       },
     }),

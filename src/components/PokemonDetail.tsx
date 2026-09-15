@@ -22,7 +22,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MapIcon from '@mui/icons-material/Map';
 import Image from 'next/image';
 
-import { usePokemonTracker, CatchStatus } from '@/data/pokemonStore';
+import { usePokemonTracker, CatchStatus, UNOWN_FORMS } from '@/data/pokemonStore';
 
 import { PokemonDefinition, LearnedMove, TmMove } from '@/utils/pokemonTypes';
 import { TYPE_COLORS } from '@/utils/pokemonTypes';
@@ -34,6 +34,7 @@ import {
   yellowSpriteUrl,
   gsSpriteUrl,
   crystalSpriteUrl,
+  unownFormSpriteUrl,
   padId,
   pokedexUrl,
   pokedexGSUrl,
@@ -477,6 +478,90 @@ function CatchToggleButton({ pokemonId }: { pokemonId: number }) {
   );
 }
 
+// ─── UnownFormsCollector ──────────────────────────────────────────────────────
+
+const FORM_STATUS_STYLE: Record<CatchStatus, { border: string; bg: string; labelColor: string }> = {
+  none:   { border: 'rgba(156,163,175,0.2)', bg: 'rgba(156,163,175,0.05)', labelColor: '#6b7280' },
+  seen:   { border: 'rgba(245,158,11,0.5)',  bg: 'rgba(245,158,11,0.1)',   labelColor: '#f59e0b' },
+  caught: { border: 'rgba(34,197,94,0.5)',   bg: 'rgba(34,197,94,0.1)',    labelColor: '#22c55e' },
+};
+
+function UnownFormTile({ letter }: { letter: string }) {
+  const status: CatchStatus = usePokemonTracker((s) => s.unownFormStatuses[letter] ?? 'none');
+  const cycleUnownForm = usePokemonTracker((s) => s.cycleUnownForm);
+  const style = FORM_STATUS_STYLE[status];
+
+  return (
+    <Box
+      onClick={() => cycleUnownForm(letter)}
+      title={`Unown ${letter} — ${status}`}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 0.25,
+        cursor: 'pointer',
+        p: 0.75,
+        borderRadius: 1,
+        border: `1px solid ${style.border}`,
+        backgroundColor: style.bg,
+        userSelect: 'none',
+        transition: 'background-color 0.15s, border-color 0.15s',
+        '&:hover': { backgroundColor: 'rgba(255,255,255,0.07)' },
+      }}
+    >
+      <Image
+        src={unownFormSpriteUrl(letter)}
+        alt={`Unown ${letter}`}
+        width={40}
+        height={40}
+        style={{ imageRendering: 'pixelated' }}
+        unoptimized
+      />
+      <Typography
+        variant="caption"
+        sx={{ fontSize: '0.65rem', fontWeight: 700, color: style.labelColor, lineHeight: 1 }}
+      >
+        {letter}
+      </Typography>
+    </Box>
+  );
+}
+
+function UnownFormsCollector() {
+  const formStatuses = usePokemonTracker((s) => s.unownFormStatuses);
+  const caught = UNOWN_FORMS.filter((l) => formStatuses[l] === 'caught').length;
+  const seen   = UNOWN_FORMS.filter((l) => formStatuses[l] === 'seen').length;
+
+  return (
+    <Box>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mb: 1.5, flexWrap: 'wrap' }}>
+        <Typography
+          variant="subtitle2"
+          sx={{ fontWeight: 700, color: '#cc0000', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '0.7rem' }}
+        >
+          Unown Forms
+        </Typography>
+        <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'text.secondary' }}>
+          <span style={{ color: '#22c55e', fontWeight: 600 }}>{caught}</span>
+          {' caught · '}
+          <span style={{ color: '#f59e0b', fontWeight: 600 }}>{seen}</span>
+          {' seen · '}
+          {UNOWN_FORMS.length - caught - seen} remaining
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+        {UNOWN_FORMS.map((letter) => (
+          <UnownFormTile key={letter} letter={letter} />
+        ))}
+      </Box>
+      <Typography variant="caption" sx={{ display: 'block', mt: 1, fontSize: '0.65rem', color: 'text.secondary' }}>
+        Click a tile to cycle: not seen → seen → caught → not seen
+      </Typography>
+    </Box>
+  );
+}
+
 /** Map game version to display color */
 const VERSION_COLOR: Record<string, string> = {
   Red: '#cc0000',
@@ -774,6 +859,14 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
               })}
             </Box>
           </Box>
+        </>
+      )}
+
+      {/* ── Unown Forms ── */}
+      {pokemon.id === 201 && (
+        <>
+          <Divider />
+          <UnownFormsCollector />
         </>
       )}
 

@@ -8,6 +8,11 @@ const nextConfig = {
         hostname: 'www.serebii.net',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.pokemondb.net',
+        pathname: '/**',
+      },
     ],
   },
 };
