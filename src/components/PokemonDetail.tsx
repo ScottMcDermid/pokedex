@@ -28,7 +28,6 @@ import {
   yellowSpriteUrl,
   gsSpriteUrl,
   crystalSpriteUrl,
-  artUrl,
   padId,
   pokedexUrl,
   pokedexGSUrl,
@@ -487,10 +486,6 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
               </Box>
             </>
           )}
-          <Box sx={{ textAlign: 'center', display: { xs: 'none', sm: 'block' } }}>
-            <Image src={artUrl(pokemon.id)} alt={`${pokemon.name} art`} width={80} height={80} style={{ objectFit: 'contain' }} unoptimized />
-            <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Art</Typography>
-          </Box>
         </Box>
 
         {/* Info */}
