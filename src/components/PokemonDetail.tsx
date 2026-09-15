@@ -116,7 +116,15 @@ function MoveRow({ entry, isLevelUp }: { entry: LearnedMove | TmMove; isLevelUp?
   );
 }
 
-function MoveTable({ entries, isLevelUp }: { entries: (LearnedMove | TmMove)[]; isLevelUp?: boolean }) {
+interface EvolutionThreshold {
+  level: number;
+  name: string;
+}
+
+function MoveTable({ entries, isLevelUp, evolutionThresholds }: { entries: (LearnedMove | TmMove)[]; isLevelUp?: boolean; evolutionThresholds?: EvolutionThreshold[] }) {
+  // Track which evolution thresholds have already been inserted
+  const insertedThresholds = new Set<number>();
+
   return (
     <Box sx={{ overflowX: 'auto' }}>
       <Table size="small" sx={{ minWidth: 600 }}>
@@ -135,9 +143,52 @@ function MoveTable({ entries, isLevelUp }: { entries: (LearnedMove | TmMove)[]; 
           </TableRow>
         </TableHead>
         <TableBody>
-          {entries.map((entry, i) => (
-            <MoveRow key={i} entry={entry} isLevelUp={isLevelUp} />
-          ))}
+          {entries.map((entry, i) => {
+            const entryLevel = isLevelUp && 'level' in entry ? (entry.level ?? 0) : null;
+            const dividers: React.ReactNode[] = [];
+
+            if (isLevelUp && entryLevel !== null && evolutionThresholds) {
+              for (const threshold of evolutionThresholds) {
+                if (!insertedThresholds.has(threshold.level) && entryLevel >= threshold.level) {
+                  insertedThresholds.add(threshold.level);
+                  dividers.push(
+                    <TableRow key={`evo-${threshold.level}`}>
+                      <TableCell
+                        colSpan={8}
+                        sx={{
+                          py: 0.5,
+                          px: 1,
+                          borderBottom: '1px solid rgba(204,0,0,0.35)',
+                          borderTop: '1px solid rgba(204,0,0,0.35)',
+                          backgroundColor: 'rgba(204,0,0,0.07)',
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            fontSize: '0.62rem',
+                            color: '#cc0000',
+                            fontWeight: 600,
+                            letterSpacing: '0.06em',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          Evolves into {threshold.name} at Lv. {threshold.level}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
+              }
+            }
+
+            return (
+              <React.Fragment key={i}>
+                {dividers}
+                <MoveRow entry={entry} isLevelUp={isLevelUp} />
+              </React.Fragment>
+            );
+          })}
         </TableBody>
       </Table>
     </Box>
@@ -518,7 +569,15 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
             </Typography>
           )}
         </Box>
-        <MoveTable entries={activeLearnset} isLevelUp />
+        <MoveTable
+          entries={activeLearnset}
+          isLevelUp
+          evolutionThresholds={
+            pokemon.evolvesTo
+              ?.filter((e) => e.method === 'level' && e.level != null)
+              .map((e) => ({ level: e.level!, name: pokemonById[e.id]?.name ?? `#${e.id}` }))
+          }
+        />
       </Box>
 
       <Divider />
