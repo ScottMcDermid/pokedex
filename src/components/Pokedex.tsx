@@ -207,9 +207,7 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
               <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: '0.02em', color: '#fff', fontSize: '1rem' }}>
                 Pokédex
               </Typography>
-              <Typography variant="caption" sx={{ ml: 1.5, color: 'rgba(255,255,255,0.7)', fontSize: '0.7rem' }}>
-                Gen I–II · Red / Blue / Yellow / Gold / Silver / Crystal
-              </Typography>
+
               <Box sx={{ flex: 1 }} />
               <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.65rem', display: { xs: 'none', sm: 'block' } }}>
                 Press / to search · ↑↓ / j k to navigate
