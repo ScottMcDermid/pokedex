@@ -45,31 +45,38 @@ export const usePokemonTracker = create<PokemonTrackerState>()(
 
 // ─── Filters ──────────────────────────────────────────────────────────────────
 
+export type CatchStatusFilter = 'caught' | 'seen' | 'unseen';
+
 interface PokemonFilterState {
   typeFilters: PokemonType[];
   versionFilters: GameVersion[];
+  catchStatusFilters: CatchStatusFilter[];
   setTypeFilters: (types: PokemonType[]) => void;
   setVersionFilters: (versions: GameVersion[]) => void;
+  setCatchStatusFilters: (statuses: CatchStatusFilter[]) => void;
   clearAllFilters: () => void;
 }
 
 export const usePokemonStore = create<PokemonFilterState>()((set) => ({
   typeFilters: [],
   versionFilters: [],
+  catchStatusFilters: [],
 
   setTypeFilters: (types) => set({ typeFilters: types }),
   setVersionFilters: (versions) => set({ versionFilters: versions }),
+  setCatchStatusFilters: (statuses) => set({ catchStatusFilters: statuses }),
 
   clearAllFilters: () =>
     set({
       typeFilters: [],
       versionFilters: [],
+      catchStatusFilters: [],
     }),
 }));
 
 /** Convenience selector — true if any filter is active */
 export function hasActiveFilters(state: PokemonFilterState) {
-  return state.typeFilters.length > 0 || state.versionFilters.length < ALL_VERSIONS.length;
+  return state.typeFilters.length > 0 || state.versionFilters.length < ALL_VERSIONS.length || state.catchStatusFilters.length > 0;
 }
 
 // Re-export for convenience

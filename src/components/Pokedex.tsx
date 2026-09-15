@@ -16,7 +16,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import theme from '@/app/theme';
 import { useHydrated } from '@/hooks/useHydrated';
-import { usePokemonStore } from '@/data/pokemonStore';
+import { usePokemonStore, usePokemonTracker } from '@/data/pokemonStore';
 import { pokemonDefinitions } from '@/data/pokemon';
 import { PokemonDefinition } from '@/utils/pokemonTypes';
 
@@ -38,12 +38,13 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
 
-  const { typeFilters, versionFilters, setTypeFilters, setVersionFilters, clearAllFilters } = usePokemonStore();
+  const { typeFilters, versionFilters, catchStatusFilters, setTypeFilters, setVersionFilters, setCatchStatusFilters, clearAllFilters } = usePokemonStore();
+  const { statuses } = usePokemonTracker();
 
   // Compute active filter count
-  const activeFilterCount = typeFilters.length + versionFilters.length;
+  const activeFilterCount = typeFilters.length + versionFilters.length + catchStatusFilters.length;
 
-  // Filter pokemon by type/version
+  // Filter pokemon by type/version/catch status
   const filteredPokemon = useMemo(() => {
     let result = pokemonDefinitions;
 
@@ -57,8 +58,20 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
       );
     }
 
+    if (catchStatusFilters.length > 0) {
+      result = result.filter((p) => {
+        const status = statuses[p.id] ?? 'none';
+        return catchStatusFilters.some((f) => {
+          if (f === 'caught') return status === 'caught';
+          if (f === 'seen') return status === 'seen';
+          if (f === 'unseen') return status === 'none';
+          return false;
+        });
+      });
+    }
+
     return result;
-  }, [typeFilters, versionFilters]);
+  }, [typeFilters, versionFilters, catchStatusFilters, statuses]);
 
   // Apply search on top of filters
   const visiblePokemon = useMemo(() => {
@@ -174,8 +187,10 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
     <PokemonFilters
       typeFilters={typeFilters}
       versionFilters={versionFilters}
+      catchStatusFilters={catchStatusFilters}
       onTypeFilterChange={setTypeFilters}
       onVersionFilterChange={setVersionFilters}
+      onCatchStatusFilterChange={setCatchStatusFilters}
       onClear={clearAllFilters}
     />
   );
