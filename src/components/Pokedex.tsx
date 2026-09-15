@@ -31,6 +31,7 @@ interface PokedexProps {
 export default function Pokedex({ pokemonId }: PokedexProps) {
   const hydrated = useHydrated();
   const listRef = useRef<PokemonListHandle>(null);
+  const visiblePokemonRef = useRef<PokemonDefinition[]>([]);
 
   const [selectedId, setSelectedId] = useState<number | null>(pokemonId ? parseInt(pokemonId, 10) : null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,6 +72,9 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
     );
   }, [filteredPokemon, searchQuery]);
 
+  // Keep a ref in sync so the stable keydown handler can read the current list
+  visiblePokemonRef.current = visiblePokemon;
+
   const selectedPokemon: PokemonDefinition | null = useMemo(
     () => (selectedId != null ? pokemonDefinitions.find((p) => p.id === selectedId) ?? null : null),
     [selectedId],
@@ -104,16 +108,42 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+      const inInput = document.activeElement?.tagName === 'INPUT';
+
+      if (e.key === '/' && !inInput) {
         e.preventDefault();
         listRef.current?.focusSearch();
       }
+
       if (e.key === 'Escape') {
         setMobileDetailOpen(false);
+      }
+
+      // Arrow / j-k list navigation (skip when typing in search)
+      if (!inInput && (e.key === 'ArrowDown' || e.key === 'j' || e.key === 'ArrowUp' || e.key === 'k')) {
+        e.preventDefault();
+        setSelectedId((prev) => {
+          const list = visiblePokemonRef.current;
+          if (list.length === 0) return prev;
+          const currentIndex = prev != null ? list.findIndex((p) => p.id === prev) : -1;
+          let nextIndex: number;
+          if (e.key === 'ArrowDown' || e.key === 'j') {
+            nextIndex = currentIndex < list.length - 1 ? currentIndex + 1 : currentIndex;
+          } else {
+            nextIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+          }
+          const next = list[nextIndex];
+          if (!next || next.id === prev) return prev;
+          setMobileDetailOpen(true);
+          window.history.pushState({}, '', `/pokemon/${next.id}`);
+          listRef.current?.scrollToIndex(nextIndex);
+          return next.id;
+        });
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Popstate for back/forward navigation
@@ -167,7 +197,7 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
               </Typography>
               <Box sx={{ flex: 1 }} />
               <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.65rem', display: { xs: 'none', sm: 'block' } }}>
-                Press / to search
+                Press / to search · ↑↓ / j k to navigate
               </Typography>
             </Toolbar>
           </AppBar>
