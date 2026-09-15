@@ -11,6 +11,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Chip from '@mui/material/Chip';
+import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,6 +21,8 @@ import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MapIcon from '@mui/icons-material/Map';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PlaceIcon from '@mui/icons-material/Place';
 import Image from 'next/image';
 
 import { usePokemonTracker, CatchStatus, UNOWN_FORMS } from '@/data/pokemonStore';
@@ -29,6 +32,7 @@ import { TYPE_COLORS } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
 import { moves } from '@/data/moves';
 import { pokemonById } from '@/data/pokemon';
+import { tmDataGen1, tmDataGen2 } from '@/data/tmData';
 import {
   rbSpriteUrl,
   yellowSpriteUrl,
@@ -69,8 +73,15 @@ function StatBar({ value, max = 250 }: { value: number; max?: number }) {
 }
 
 function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLevelUp?: boolean; gen: 1 | 2 }) {
+  const [expanded, setExpanded] = useState(false);
   const moveName = 'move' in entry ? entry.move : '';
   const moveData = moves[moveName];
+
+  const isTm = !isLevelUp && 'tm' in entry;
+  const tmKey = isTm ? (entry as TmMove).tm : null;
+  const tmInfo = tmKey ? (gen === 2 ? tmDataGen2[tmKey] : tmDataGen1[tmKey]) : null;
+
+  const isExpandable = !!moveData;
 
   if (!moveData) {
     return (
@@ -79,7 +90,7 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
           {'level' in entry ? (entry.level ?? '—') : ('tm' in entry ? entry.tm : '—')}
         </TableCell>
         <TableCell sx={{ fontSize: '0.75rem' }}>{moveName}</TableCell>
-        <TableCell colSpan={5} sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>—</TableCell>
+        <TableCell colSpan={6} sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>—</TableCell>
       </TableRow>
     );
   }
@@ -90,57 +101,101 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
   const attackLink = gen === 2 ? attackdexGSUrl(moveData.name) : attackdexUrl(moveData.name);
 
   return (
-    <TableRow sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' } }}>
-      {/* Level or TM */}
-      <TableCell sx={{ color: 'text.secondary', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
-        {isLevelUp
-          ? ('level' in entry ? (entry.level ?? '—') : '—')
-          : ('tm' in entry ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <span>{(entry as TmMove).tm}</span>
-                {yellowOnly && (
-                  <Chip label="Yellow" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#f8d030', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
-                )}
-                {crystalOnly && (
-                  <Chip label="Crystal" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#4fc3f7', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
-                )}
-              </Box>
-            ) : '—')
-        }
-      </TableCell>
-      {/* Move name */}
-      <TableCell>
-        <Link href={attackLink} target="_blank" rel="noreferrer" underline="hover" sx={{ color: '#e5e7eb', fontSize: '0.75rem' }}>
-          {moveData.name}
-        </Link>
-      </TableCell>
-      {/* Type */}
-      <TableCell>
-        <Chip
-          label={moveData.type}
-          size="small"
-          sx={{ backgroundColor: typeColor, color: '#fff', fontWeight: 700, fontSize: '0.6rem', height: 18, textShadow: '0 1px 2px rgba(0,0,0,0.4)', '& .MuiChip-label': { px: 0.75 }, borderRadius: 0.5 }}
-        />
-      </TableCell>
-      {/* Power */}
-      <TableCell sx={{ fontSize: '0.72rem', color: moveData.power ? 'text.primary' : 'text.secondary' }}>
-        {moveData.power ?? '—'}
-      </TableCell>
-      {/* Accuracy */}
-      <TableCell sx={{ fontSize: '0.72rem', color: moveData.accuracy ? 'text.primary' : 'text.secondary' }}>
-        {moveData.accuracy != null ? `${moveData.accuracy}%` : '—'}
-      </TableCell>
-      {/* PP */}
-      <TableCell sx={{ fontSize: '0.72rem' }}>{moveData.pp}</TableCell>
-      {/* Effect % */}
-      <TableCell sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
-        {moveData.effectPct != null ? `${moveData.effectPct}%` : '—'}
-      </TableCell>
-      {/* Description */}
-      <TableCell sx={{ fontSize: '0.68rem', color: 'text.secondary', maxWidth: 200 }}>
-        {moveData.description}
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow
+        sx={{
+          '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' },
+          cursor: isExpandable ? 'pointer' : 'default',
+        }}
+        onClick={isExpandable ? () => setExpanded((v) => !v) : undefined}
+      >
+        {/* Level or TM */}
+        <TableCell sx={{ color: 'text.secondary', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+          {isLevelUp
+            ? ('level' in entry ? (entry.level ?? '—') : '—')
+            : ('tm' in entry ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <span>{(entry as TmMove).tm}</span>
+                  {yellowOnly && (
+                    <Chip label="Yellow" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#f8d030', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
+                  )}
+                  {crystalOnly && (
+                    <Chip label="Crystal" size="small" sx={{ height: 14, fontSize: '0.55rem', backgroundColor: '#4fc3f7', color: '#000', '& .MuiChip-label': { px: 0.5 } }} />
+                  )}
+                </Box>
+              ) : '—')
+          }
+        </TableCell>
+        {/* Move name */}
+        <TableCell>
+          <Link
+            href={attackLink}
+            target="_blank"
+            rel="noreferrer"
+            underline="hover"
+            sx={{ color: '#e5e7eb', fontSize: '0.75rem' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {moveData.name}
+          </Link>
+        </TableCell>
+        {/* Type */}
+        <TableCell>
+          <Chip
+            label={moveData.type}
+            size="small"
+            sx={{ backgroundColor: typeColor, color: '#fff', fontWeight: 700, fontSize: '0.6rem', height: 18, textShadow: '0 1px 2px rgba(0,0,0,0.4)', '& .MuiChip-label': { px: 0.75 }, borderRadius: 0.5 }}
+          />
+        </TableCell>
+        {/* Power */}
+        <TableCell sx={{ fontSize: '0.72rem', color: moveData.power ? 'text.primary' : 'text.secondary' }}>
+          {moveData.power ?? '—'}
+        </TableCell>
+        {/* Accuracy */}
+        <TableCell sx={{ fontSize: '0.72rem', color: moveData.accuracy ? 'text.primary' : 'text.secondary' }}>
+          {moveData.accuracy != null ? `${moveData.accuracy}%` : '—'}
+        </TableCell>
+        {/* PP */}
+        <TableCell sx={{ fontSize: '0.72rem' }}>{moveData.pp}</TableCell>
+        {/* Effect % */}
+        <TableCell sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+          {moveData.effectPct != null ? `${moveData.effectPct}%` : '—'}
+        </TableCell>
+        {/* Expand chevron */}
+        <TableCell sx={{ fontSize: '0.68rem', color: 'text.secondary', width: 24, pr: 1 }}>
+          <ExpandMoreIcon
+            sx={{
+              fontSize: '0.9rem',
+              color: 'text.secondary',
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s',
+              display: 'block',
+            }}
+          />
+        </TableCell>
+      </TableRow>
+
+      {/* Expandable details row */}
+      <TableRow sx={{ backgroundColor: 'rgba(255,255,255,0.015)' }}>
+        <TableCell colSpan={8} sx={{ py: 0, border: 0 }}>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <Box sx={{ px: 1.5, py: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+              {isTm && tmInfo && (
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                  <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
+                  <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', lineHeight: 1.5 }}>
+                    {tmInfo.location}
+                  </Typography>
+                </Box>
+              )}
+              <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', pl: isTm && tmInfo ? '1.55rem' : 0, lineHeight: 1.5 }}>
+                {moveData.description}
+              </Typography>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
   );
 }
 
@@ -167,7 +222,7 @@ function MoveTable({ entries, isLevelUp, evolutionThresholds, gen }: { entries: 
             <TableCell sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>Acc</TableCell>
             <TableCell sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>PP</TableCell>
             <TableCell sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>Eff%</TableCell>
-            <TableCell sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>Description</TableCell>
+            <TableCell sx={{ width: 24 }} />
           </TableRow>
         </TableHead>
         <TableBody>
