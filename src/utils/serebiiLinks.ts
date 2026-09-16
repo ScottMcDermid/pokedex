@@ -87,7 +87,7 @@ export interface KantoLocationInfo {
   slug: string;
   mapNum: number;
   label: string;
-  region?: 'kanto' | 'johto';
+  region?: 'kanto' | 'johto' | 'kanto2';
 }
 
 /**
@@ -157,6 +157,11 @@ export const KANTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Rocket Hideout',   info: { slug: 'rockethideout',   mapNum: 49,  label: 'Rocket Hideout',   region: 'kanto' } },
   { key: 'Silph Co.',        info: { slug: 'silphco',         mapNum: 50,  label: 'Silph Co.',        region: 'kanto' } },
   { key: 'SS Anne',          info: { slug: 'ssanne',          mapNum: 47,  label: 'SS Anne',          region: 'kanto' } },
+  { key: 'S.S. Anne',       info: { slug: 'ssanne',          mapNum: 47,  label: 'SS Anne',          region: 'kanto' } },
+  { key: 'Game Corner',     info: { slug: 'celadoncity',     mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
+  { key: 'Celadon City Store', info: { slug: 'celadoncity',  mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
+  { key: 'Celadon Mansion', info: { slug: 'celadoncity',     mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
+  { key: 'Vermilion Gym',   info: { slug: 'vermilioncity',   mapNum: 30,  label: 'Vermilion City',   region: 'kanto' } },
 ];
 
 // ─── Johto Location Map ───────────────────────────────────────────────────────
@@ -215,6 +220,21 @@ export const JOHTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Lake of Rage',       info: { slug: 'lakeofrage',      mapNum: 42,  label: 'Lake of Rage',      region: 'johto' } },
   { key: 'Ice Path',           info: { slug: 'icepath',         mapNum: 43,  label: 'Ice Path',          region: 'johto' } },
   { key: 'Mt. Silver',         info: { slug: 'mt.silver',       mapNum: 44,  label: 'Mt. Silver',        region: 'johto' } },
+  { key: 'Shining Lighthouse', info: { slug: 'shininglighthouse', mapNum: 47, label: 'Shining Lighthouse', region: 'johto' } },
+  { key: 'Lighthouse',         info: { slug: 'shininglighthouse', mapNum: 47, label: 'Shining Lighthouse', region: 'johto' } },
+  { key: 'Ice Cave',           info: { slug: 'icepath',         mapNum: 43,  label: 'Ice Path',           region: 'johto' } },
+  { key: 'Goldenrod Dept. Store', info: { slug: 'goldenrodcity', mapNum: 23, label: 'Goldenrod City',     region: 'johto' } },
+  { key: 'Goldenrod Game Corner', info: { slug: 'goldenrodcity', mapNum: 23, label: 'Goldenrod City',     region: 'johto' } },
+  { key: 'Goldenrod City Shop',   info: { slug: 'goldenrodcity', mapNum: 23, label: 'Goldenrod City',     region: 'johto' } },
+  { key: 'Goldenrod Shop',        info: { slug: 'goldenrodcity', mapNum: 23, label: 'Goldenrod City',     region: 'johto' } },
+  { key: 'Celadon Game Corner',   info: { slug: 'celadoncity',   mapNum: 35, label: 'Celadon City',       region: 'kanto' } },
+  { key: 'Celadon Shop',          info: { slug: 'celadoncity',   mapNum: 35, label: 'Celadon City',       region: 'kanto' } },
+  { key: 'Celadon PokéMart',      info: { slug: 'celadoncity',   mapNum: 35, label: 'Celadon City',       region: 'kanto' } },
+  { key: 'Celadon Pokemart',      info: { slug: 'celadoncity',   mapNum: 35, label: 'Celadon City',       region: 'kanto' } },
+  { key: 'Mahogany Gym',          info: { slug: 'mahoganytown',  mapNum: 49, label: 'Mahogany Town',      region: 'johto' } },
+  { key: 'Tohjo Falls',           info: { slug: 'tohjofalls',    mapNum: 56, label: 'Tohjo Falls',        region: 'kanto2' } },
+  { key: 'Route 27',              info: { slug: 'route27',       mapNum: 27, label: 'Route 27',           region: 'kanto2' } },
+  { key: 'Route 28',              info: { slug: 'route28',       mapNum: 28, label: 'Route 28',           region: 'kanto2' } },
 ];
 
 /** Combined lookup of all locations (Kanto + Johto) */
@@ -230,6 +250,11 @@ export function pokEarthJohtoUrl(slug: string): string {
   return `https://www.serebii.net/pokearth/johto/2nd/${slug}.shtml`;
 }
 
+/** Build the Gen 2 Pokéarth page URL for a Kanto (GSC) slug */
+export function pokEarthKanto2Url(slug: string): string {
+  return `https://www.serebii.net/pokearth/kanto/2nd/${slug}.shtml`;
+}
+
 /** Build the RBY map image URL for a Kanto map number */
 export function mapImageUrl(mapNum: number): string {
   return `https://www.serebii.net/pokearth/maps/kanto-rby/${mapNum}.png`;
@@ -238,6 +263,11 @@ export function mapImageUrl(mapNum: number): string {
 /** Build the GSC map image URL for a Johto map number */
 export function mapImageJohtoUrl(mapNum: number): string {
   return `https://www.serebii.net/pokearth/maps/johto2nd/${mapNum}.png`;
+}
+
+/** Build the GSC map image URL for a Kanto (Gen 2) map number */
+export function mapImageKanto2Url(mapNum: number): string {
+  return `https://www.serebii.net/pokearth/maps/kanto2nd/${mapNum}.png`;
 }
 
 // ─── Route number lookup ──────────────────────────────────────────────────────

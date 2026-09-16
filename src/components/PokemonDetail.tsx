@@ -46,8 +46,10 @@ import {
   attackdexGSUrl,
   pokEarthUrl,
   pokEarthJohtoUrl,
+  pokEarthKanto2Url,
   mapImageUrl,
   mapImageJohtoUrl,
+  mapImageKanto2Url,
   tokenizeLocation,
   KantoLocationInfo,
 } from '@/utils/serebiiLinks';
@@ -415,8 +417,17 @@ function PlaceTooltip({
   }, [open]);
 
   const isJohto = info.region === 'johto';
-  const earthUrl = isJohto ? pokEarthJohtoUrl(info.slug) : pokEarthUrl(info.slug);
-  const imgUrl = isJohto ? mapImageJohtoUrl(info.mapNum) : mapImageUrl(info.mapNum);
+  const isKanto2 = info.region === 'kanto2';
+  const earthUrl = isJohto
+    ? pokEarthJohtoUrl(info.slug)
+    : isKanto2
+      ? pokEarthKanto2Url(info.slug)
+      : pokEarthUrl(info.slug);
+  const imgUrl = isJohto
+    ? mapImageJohtoUrl(info.mapNum)
+    : isKanto2
+      ? mapImageKanto2Url(info.mapNum)
+      : mapImageUrl(info.mapNum);
 
   const tooltipContent = (
     <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
