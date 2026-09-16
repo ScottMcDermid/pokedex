@@ -190,19 +190,28 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
                     ].filter((x): x is { label: string; color: string; info: typeof tmInfoGen1 & object } => x !== null)
                   ).map(({ label, color, info }) => (
                     <Box key={label} sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
-                      {info.location.split(' · ').map((loc, idx) => (
-                        <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
-                          <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
-                          <Chip
-                            label={label}
-                            size="small"
-                            sx={{ height: 14, fontSize: '0.55rem', backgroundColor: color, color: '#fff', flexShrink: 0, '& .MuiChip-label': { px: 0.5 } }}
-                          />
-                          <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', lineHeight: 1.5 }}>
-                            {loc}
-                          </Typography>
-                        </Box>
-                      ))}
+                      {info.location.split(' · ').map((loc, idx) => {
+                        const segments = tokenizeLocation(loc);
+                        return (
+                          <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                            <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
+                            <Chip
+                              label={label}
+                              size="small"
+                              sx={{ height: 14, fontSize: '0.55rem', backgroundColor: color, color: '#fff', flexShrink: 0, '& .MuiChip-label': { px: 0.5 } }}
+                            />
+                            <Typography variant="caption" component="span" sx={{ fontSize: '0.7rem', color: 'text.secondary', lineHeight: 1.5 }}>
+                              {segments.map((seg, si) =>
+                                seg.kind === 'text' ? (
+                                  <span key={si}>{seg.text}</span>
+                                ) : (
+                                  <PlaceTooltip key={si} text={seg.text} info={seg.info} versionColor={color} />
+                                )
+                              )}
+                            </Typography>
+                          </Box>
+                        );
+                      })}
                     </Box>
                   ))}
                 </Box>
