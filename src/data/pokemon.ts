@@ -5205,9 +5205,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 148, method: 'level', level: 30 }],
     locations: [
-      { version: 'Red', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize), Fishing in Dragon Den route' },
-      { version: 'Blue', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize), Fishing in Dragon Den route' },
-      { version: 'Yellow', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize)' },
+      { version: 'Red', location: 'Safari Zone (Fishing - Super Rod, all areas), Celadon Game Corner (Prize)' },
+      { version: 'Blue', location: 'Safari Zone (Fishing - Super Rod, all areas), Celadon Game Corner (Prize)' },
+      { version: 'Yellow', location: 'Safari Zone (Fishing - Super Rod, all areas), Celadon Game Corner (Prize)' },
       { version: 'Gold', location: 'Route 45, Dragon\'s Den (Fishing - Super Rod)' },
       { version: 'Silver', location: 'Route 45, Dragon\'s Den (Fishing - Super Rod)' },
       { version: 'Crystal', location: 'Route 45, Dragon\'s Den (Fishing - Super Rod)' },
