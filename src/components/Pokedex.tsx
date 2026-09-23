@@ -16,8 +16,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import theme from '@/app/theme';
 import { useHydrated } from '@/hooks/useHydrated';
+import { useDebounce } from '@/hooks/useDebounce';
 import { usePokemonStore, usePokemonTracker } from '@/data/pokemonStore';
-import { pokemonDefinitions } from '@/data/pokemon';
+import { pokemonDefinitions, pokemonSearchTokens } from '@/data/pokemon';
 import { PokemonDefinition } from '@/utils/pokemonTypes';
 
 import PokemonList, { PokemonListHandle } from '@/components/PokemonList';
@@ -35,6 +36,7 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
 
   const [selectedId, setSelectedId] = useState<number | null>(pokemonId ? parseInt(pokemonId, 10) : null);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 150);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
 
@@ -73,17 +75,15 @@ export default function Pokedex({ pokemonId }: PokedexProps) {
     return result;
   }, [typeFilters, versionFilters, catchStatusFilters, statuses]);
 
-  // Apply search on top of filters
+  // Apply search on top of filters (uses pre-computed tokens to avoid toLowerCase/padStart per keystroke)
   const visiblePokemon = useMemo(() => {
-    if (!searchQuery.trim()) return filteredPokemon;
-    const q = searchQuery.toLowerCase();
-    return filteredPokemon.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        String(p.id).padStart(3, '0').includes(q) ||
-        p.types.some((t) => t.toLowerCase().includes(q)),
-    );
-  }, [filteredPokemon, searchQuery]);
+    if (!debouncedSearchQuery.trim()) return filteredPokemon;
+    const q = debouncedSearchQuery.toLowerCase();
+    return filteredPokemon.filter((p) => {
+      const tok = pokemonSearchTokens[p.id];
+      return tok.name.includes(q) || tok.id.includes(q) || tok.types.some((t) => t.includes(q));
+    });
+  }, [filteredPokemon, debouncedSearchQuery]);
 
   // Keep a ref in sync so the stable keydown handler can read the current list
   visiblePokemonRef.current = visiblePokemon;

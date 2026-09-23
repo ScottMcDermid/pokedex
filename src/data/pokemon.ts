@@ -8184,3 +8184,18 @@ export const pokemonDefinitions: PokemonDefinition[] = _pokemonDefinitions;
 export const pokemonById: Record<number, PokemonDefinition> = Object.fromEntries(
   _pokemonDefinitions.map((p) => [p.id, p]),
 );
+
+/** Pre-computed lowercase search tokens for each Pokemon, keyed by id.
+ *  Computed once at module load so the search filter never calls toLowerCase()
+ *  or padStart() at runtime. */
+export const pokemonSearchTokens: Record<number, { name: string; id: string; types: string[] }> =
+  Object.fromEntries(
+    _pokemonDefinitions.map((p) => [
+      p.id,
+      {
+        name: p.name.toLowerCase(),
+        id: String(p.id).padStart(3, '0'),
+        types: p.types.map((t) => t.toLowerCase()),
+      },
+    ]),
+  );
