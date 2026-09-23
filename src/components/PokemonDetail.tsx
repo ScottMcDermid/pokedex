@@ -428,7 +428,7 @@ function PlaceTooltip({
       : mapImageUrl(info.mapNum, info.mapSuffix);
 
   const tooltipContent = (
-    <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
+    <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: { xs: 'calc(100vw - 32px)', sm: 340 } }}>
       <Box
         sx={{
           position: 'relative',
@@ -477,6 +477,29 @@ function PlaceTooltip({
       enterDelay={150}
       enterNextDelay={80}
       disableTouchListener
+      PopperProps={{
+        modifiers: [
+          {
+            name: 'flip',
+            enabled: true,
+            options: {
+              // Flip to bottom/top/left when there isn't enough room on the preferred side
+              fallbackPlacements: ['bottom', 'top', 'left'],
+              boundary: 'viewport',
+            },
+          },
+          {
+            name: 'preventOverflow',
+            enabled: true,
+            options: {
+              boundary: 'viewport',
+              // Keep at least 8px away from any edge of the viewport
+              padding: 8,
+              altAxis: true,
+            },
+          },
+        ],
+      }}
       componentsProps={{
         tooltip: {
           sx: {
@@ -485,7 +508,8 @@ function PlaceTooltip({
             borderRadius: 1.5,
             p: 1,
             boxShadow: `0 4px 20px rgba(0,0,0,0.6), 0 0 0 1px ${versionColor}33`,
-            maxWidth: 360,
+            // Responsive max-width: full viewport minus 16px breathing room on small screens
+            maxWidth: { xs: 'calc(100vw - 16px)', sm: 360 },
           },
         },
         arrow: { sx: { color: `${versionColor}66` } },
