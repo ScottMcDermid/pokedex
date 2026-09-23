@@ -242,6 +242,7 @@ export const JOHTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Celadon Pokemart',      info: { slug: 'celadoncity',   mapNum: 35, label: 'Celadon City',       region: 'kanto' } },
   { key: 'Mahogany Gym',          info: { slug: 'mahoganytown',  mapNum: 49, label: 'Mahogany Town',      region: 'johto' } },
   { key: 'Tohjo Falls',           info: { slug: 'tohjofalls',    mapNum: 56, label: 'Tohjo Falls',        region: 'kanto2' } },
+  { key: 'Route 26',              info: { slug: 'route26',       mapNum: 26, label: 'Route 26',           region: 'kanto2' } },
   { key: 'Route 27',              info: { slug: 'route27',       mapNum: 27, label: 'Route 27',           region: 'kanto2' } },
   { key: 'Route 28',              info: { slug: 'route28',       mapNum: 28, label: 'Route 28',           region: 'kanto2' } },
 ];
@@ -331,62 +332,85 @@ export function tokenizeLocation(locationStr: string): LocationSegment[] {
   while (remaining.length > 0) {
     let matched = false;
 
-    // ── "Routes N-M" (range) ──────────────────────────────────────────────
-    const rangeMatch = remaining.match(/^(Routes?\s+)(\d+)-(\d+)/i);
-    if (rangeMatch) {
-      const prefix = rangeMatch[1]; // "Routes " or "Route "
-      const from = parseInt(rangeMatch[2], 10);
-      const to = parseInt(rangeMatch[3], 10);
-      if (prefix) segments.push({ kind: 'text', text: prefix });
-      for (let n = from; n <= to; n++) {
-        const info = routeInfo(n);
-        const label = `Route ${n}`;
-        if (info) {
-          segments.push({ kind: 'place', text: label, info });
-        } else {
-          segments.push({ kind: 'text', text: label });
-        }
-        if (n < to) segments.push({ kind: 'text', text: '-' });
-      }
-      remaining = remaining.slice(rangeMatch[0].length);
-      matched = true;
-    }
-
-    // ── "Routes N, M, …" — plural with comma-separated numbers ───────────
-    if (!matched) {
-      const pluralMatch = remaining.match(/^Routes\s+(\d[\d,\s]*)/i);
+    // ── "Routes N, M, N-M, …" — plural, any mix of numbers and ranges ────
+    {
+      const pluralMatch = remaining.match(/^Routes\s+(\d[\d,\s-]*)/i);
       if (pluralMatch) {
         segments.push({ kind: 'text', text: 'Routes ' });
         remaining = remaining.slice('Routes '.length);
 
-        // Consume a run of "N" / ", N" / ", N" tokens
-        let first = true;
+        // Consume a run of "N" / ", N" / "N-M" tokens
         while (remaining.length > 0) {
           const numMatch = remaining.match(/^(\d+)/);
           if (!numMatch) break;
-          const n = parseInt(numMatch[1], 10);
-          const info = routeInfo(n);
-          const label = `${n}`;
-          if (!first) {
-            // peek back: the separator was already consumed as text
-          }
-          if (info) {
-            segments.push({ kind: 'place', text: label, info });
-          } else {
-            segments.push({ kind: 'text', text: label });
-          }
+          const from = parseInt(numMatch[1], 10);
           remaining = remaining.slice(numMatch[0].length);
-          first = false;
 
-          // consume the separator ", " or "-" if it leads to another number
-          const sepMatch = remaining.match(/^(,\s*|-\s*)(?=\d)/);
+          // Check if this is a range "N-M"
+          const rangeEnd = remaining.match(/^-(\d+)/);
+          if (rangeEnd) {
+            const to = parseInt(rangeEnd[1], 10);
+            if (to > from) {
+              // Expand the range inline
+              remaining = remaining.slice(rangeEnd[0].length);
+              for (let n = from; n <= to; n++) {
+                const info = routeInfo(n);
+                if (info) {
+                  segments.push({ kind: 'place', text: `${n}`, info });
+                } else {
+                  segments.push({ kind: 'text', text: `${n}` });
+                }
+                if (n < to) segments.push({ kind: 'text', text: ', ' });
+              }
+            } else {
+              // Not a range (e.g. "12-9"), just emit the number
+              const info = routeInfo(from);
+              if (info) {
+                segments.push({ kind: 'place', text: `${from}`, info });
+              } else {
+                segments.push({ kind: 'text', text: `${from}` });
+              }
+            }
+          } else {
+            // Single number
+            const info = routeInfo(from);
+            if (info) {
+              segments.push({ kind: 'place', text: `${from}`, info });
+            } else {
+              segments.push({ kind: 'text', text: `${from}` });
+            }
+          }
+
+          // consume the comma separator ", " if it leads to another number
+          const sepMatch = remaining.match(/^,\s*(?=\d)/);
           if (sepMatch) {
-            segments.push({ kind: 'text', text: sepMatch[0] });
+            segments.push({ kind: 'text', text: ', ' });
             remaining = remaining.slice(sepMatch[0].length);
           } else {
             break;
           }
         }
+        matched = true;
+      }
+    }
+
+    // ── "Route N-M" (singular range) ─────────────────────────────────────
+    if (!matched) {
+      const rangeMatch = remaining.match(/^Route\s+(\d+)-(\d+)/i);
+      if (rangeMatch) {
+        const from = parseInt(rangeMatch[1], 10);
+        const to = parseInt(rangeMatch[2], 10);
+        segments.push({ kind: 'text', text: 'Route ' });
+        for (let n = from; n <= to; n++) {
+          const info = routeInfo(n);
+          if (info) {
+            segments.push({ kind: 'place', text: `Route ${n}`, info });
+          } else {
+            segments.push({ kind: 'text', text: `Route ${n}` });
+          }
+          if (n < to) segments.push({ kind: 'text', text: '-' });
+        }
+        remaining = remaining.slice(rangeMatch[0].length);
         matched = true;
       }
     }
@@ -442,5 +466,90 @@ export function tokenizeLocation(locationStr: string): LocationSegment[] {
     }
   }
 
-  return segments;
+  return collapseRoutes(segments);
+}
+
+/**
+ * Collapse all route segments into a single sorted, deduplicated list and
+ * place it before any non-route locations.
+ *
+ * e.g. "Route 32, Ruins of Alph, Routes 12-15, Routes 26-27"
+ *   → "Route 12, 13, 14, 15, 26, 27, 32, Ruins of Alph"
+ *
+ * A chunk (run of segments between ", " separators) is a route chunk when its
+ * first segment is a "Routes? " prefix text, a bare-number text, or a place
+ * whose text is a bare number or "Route N".
+ */
+function collapseRoutes(segments: LocationSegment[]): LocationSegment[] {
+  // Split into top-level chunks at ", " boundaries.
+  const chunks: LocationSegment[][] = [];
+  let current: LocationSegment[] = [];
+  for (const seg of segments) {
+    if (seg.kind === 'text' && seg.text === ', ') {
+      chunks.push(current);
+      current = [];
+    } else {
+      current.push(seg);
+    }
+  }
+  if (current.length > 0) chunks.push(current);
+
+  // Classify each chunk.
+  const isRouteChunk = (chunk: LocationSegment[]): boolean => {
+    const first = chunk[0];
+    if (!first) return false;
+    if (first.kind === 'text') {
+      return /^Routes?\s+/i.test(first.text) || /^\d+$/.test(first.text.trim());
+    }
+    return /^(Route\s+)?\d+$/i.test(first.text);
+  };
+
+  const routeChunks = chunks.filter(isRouteChunk);
+  const nonRouteChunks = chunks.filter((c) => !isRouteChunk(c));
+
+  // Extract every route place segment from all route chunks, collect unique
+  // route numbers, and build a single merged list.
+  const seen = new Set<number>();
+  const routeEntries: Array<{ n: number; info: KantoLocationInfo | null }> = [];
+
+  for (const chunk of routeChunks) {
+    for (const seg of chunk) {
+      // Place segments whose text is a bare number or "Route N"
+      if (seg.kind === 'place' && /^(Route\s+)?\d+$/i.test(seg.text)) {
+        const n = parseInt(seg.text.replace(/^Route\s+/i, ''), 10);
+        if (!seen.has(n)) { seen.add(n); routeEntries.push({ n, info: seg.info }); }
+      }
+      // Text segments that are bare numbers (unknown routes without a map entry)
+      if (seg.kind === 'text' && /^\d+$/.test(seg.text.trim())) {
+        const n = parseInt(seg.text.trim(), 10);
+        if (!seen.has(n)) { seen.add(n); routeEntries.push({ n, info: null }); }
+      }
+    }
+  }
+
+  routeEntries.sort((a, b) => a.n - b.n);
+
+  // Build the merged route segment list: "Route " prefix + N, N, N, …
+  const result: LocationSegment[] = [];
+
+  if (routeEntries.length > 0) {
+    result.push({ kind: 'text', text: 'Route ' });
+    for (let i = 0; i < routeEntries.length; i++) {
+      const { n, info } = routeEntries[i];
+      if (info) {
+        result.push({ kind: 'place', text: `${n}`, info });
+      } else {
+        result.push({ kind: 'text', text: `${n}` });
+      }
+      if (i < routeEntries.length - 1) result.push({ kind: 'text', text: ', ' });
+    }
+  }
+
+  // Append non-route chunks.
+  for (const chunk of nonRouteChunks) {
+    if (result.length > 0) result.push({ kind: 'text', text: ', ' });
+    result.push(...chunk);
+  }
+
+  return result;
 }
