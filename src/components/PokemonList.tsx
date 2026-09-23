@@ -13,11 +13,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
-import Image from 'next/image';
-
 import { PokemonDefinition } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
-import { rbSpriteUrl, gsSpriteUrl, padId } from '@/utils/serebiiLinks';
+import { PokemonSprite } from '@/components/PokemonSprite';
+import { padId } from '@/utils/serebiiLinks';
 import { usePokemonTracker, CatchStatus } from '@/data/pokemonStore';
 
 const ROW_HEIGHT = 60;
@@ -98,13 +97,11 @@ function PokemonRow({
       </Typography>
 
       <Box sx={{ width: 36, height: 36, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Image
-          src={p.generation === 2 ? gsSpriteUrl(p.id) : rbSpriteUrl(p.id)}
+        <PokemonSprite
+          id={p.id}
+          set={p.generation === 2 ? 'gold' : 'rb'}
+          size={36}
           alt={p.name}
-          width={36}
-          height={36}
-          style={{ imageRendering: 'pixelated', objectFit: 'contain' }}
-          unoptimized
         />
       </Box>
 

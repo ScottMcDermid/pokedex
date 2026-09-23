@@ -30,15 +30,11 @@ import { usePokemonTracker, CatchStatus, UNOWN_FORMS } from '@/data/pokemonStore
 import { PokemonDefinition, LearnedMove, TmMove } from '@/utils/pokemonTypes';
 import { TYPE_COLORS } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
+import { PokemonSprite, UnownSprite } from '@/components/PokemonSprite';
 import { moves } from '@/data/moves';
 import { pokemonById } from '@/data/pokemon';
 import { tmDataGen1, tmDataGen2 } from '@/data/tmData';
 import {
-  rbSpriteUrl,
-  yellowSpriteUrl,
-  gsSpriteUrl,
-  crystalSpriteUrl,
-  unownFormSpriteUrl,
   padId,
   pokedexUrl,
   pokedexGSUrl,
@@ -343,7 +339,6 @@ function EvolutionChain({ pokemon, onNavigate }: { pokemon: PokemonDefinition; o
     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
       {chain.map((p, i) => {
         const evoInfo = i > 0 ? chain[i - 1].evolvesTo?.find((e) => e.id === p.id) : null;
-        const spriteUrl = p.generation === 2 ? gsSpriteUrl(p.id) : rbSpriteUrl(p.id);
         return (
           <React.Fragment key={p.id}>
             {i > 0 && (
@@ -375,7 +370,7 @@ function EvolutionChain({ pokemon, onNavigate }: { pokemon: PokemonDefinition; o
                 '&:hover': { backgroundColor: 'rgba(255,255,255,0.07)' },
               }}
             >
-              <Image src={spriteUrl} alt={p.name} width={48} height={48} style={{ imageRendering: 'pixelated' }} unoptimized />
+              <PokemonSprite id={p.id} set={p.generation === 2 ? 'gold' : 'rb'} size={48} alt={p.name} />
               <Typography variant="caption" sx={{ fontSize: '0.65rem', color: 'text.secondary' }}>
                 #{padId(p.id)}
               </Typography>
@@ -604,14 +599,7 @@ function UnownFormTile({ letter }: { letter: string }) {
         '&:hover': { backgroundColor: 'rgba(255,255,255,0.07)' },
       }}
     >
-      <Image
-        src={unownFormSpriteUrl(letter)}
-        alt={`Unown ${letter}`}
-        width={40}
-        height={40}
-        style={{ imageRendering: 'pixelated' }}
-        unoptimized
-      />
+      <UnownSprite letter={letter} size={40} alt={`Unown ${letter}`} />
       <Typography
         variant="caption"
         sx={{ fontSize: '0.65rem', fontWeight: 700, color: style.labelColor, lineHeight: 1 }}
@@ -708,22 +696,22 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
           {isGen2 ? (
             <>
               <Box sx={{ textAlign: 'center' }}>
-                <Image src={gsSpriteUrl(pokemon.id)} alt={`${pokemon.name} GS`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <PokemonSprite id={pokemon.id} set="gold" size={80} alt={`${pokemon.name} GS`} />
                 <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Gold/Silver</Typography>
               </Box>
               <Box sx={{ textAlign: 'center' }}>
-                <Image src={crystalSpriteUrl(pokemon.id)} alt={`${pokemon.name} Crystal`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <PokemonSprite id={pokemon.id} set="crystal" size={80} alt={`${pokemon.name} Crystal`} />
                 <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Crystal</Typography>
               </Box>
             </>
           ) : (
             <>
               <Box sx={{ textAlign: 'center' }}>
-                <Image src={rbSpriteUrl(pokemon.id)} alt={`${pokemon.name} RB`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <PokemonSprite id={pokemon.id} set="rb" size={80} alt={`${pokemon.name} RB`} />
                 <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Red/Blue</Typography>
               </Box>
               <Box sx={{ textAlign: 'center' }}>
-                <Image src={yellowSpriteUrl(pokemon.id)} alt={`${pokemon.name} Yellow`} width={80} height={80} style={{ imageRendering: 'pixelated' }} unoptimized />
+                <PokemonSprite id={pokemon.id} set="yellow" size={80} alt={`${pokemon.name} Yellow`} />
                 <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', fontSize: '0.6rem' }}>Yellow</Typography>
               </Box>
             </>
