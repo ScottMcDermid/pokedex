@@ -403,7 +403,10 @@ function PlaceTooltip({
   useEffect(() => {
     if (!open) return;
     function handleOutsideTouch(e: TouchEvent) {
-      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const insideTrigger = triggerRef.current?.contains(target);
+      const insideTooltip = (target as Element).closest?.('[role="tooltip"]');
+      if (!insideTrigger && !insideTooltip) {
         setOpen(false);
       }
     }
