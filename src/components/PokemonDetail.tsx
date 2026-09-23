@@ -702,6 +702,26 @@ const TIME_OF_DAY_CONFIG: Record<TimeOfDay, { label: string; icon: string; color
   'Morning & Night': { label: 'Morning & Night', icon: '🌓', color: '#a78bfa', bg: 'rgba(167,139,250,0.13)' },
 };
 
+/** Rod type required to encounter a Pokémon at a fishing location */
+type RodType = 'Old Rod' | 'Good Rod' | 'Super Rod' | 'Fishing';
+
+/** Detect the rod/fishing type from a raw location string */
+function detectRodType(location: string): RodType | null {
+  if (/fishing\s*-\s*old\s*rod/i.test(location)) return 'Old Rod';
+  if (/fishing\s*-\s*good\s*rod/i.test(location)) return 'Good Rod';
+  if (/fishing\s*-\s*super\s*rod/i.test(location)) return 'Super Rod';
+  if (/fishing/i.test(location)) return 'Fishing';
+  return null;
+}
+
+/** Visual config for each rod type */
+const ROD_CONFIG: Record<RodType, { label: string; color: string; bg: string; title: string }> = {
+  'Old Rod':   { label: 'Old Rod',   color: '#a0855b', bg: 'rgba(160,133,91,0.18)',  title: 'Requires Old Rod'   },
+  'Good Rod':  { label: 'Good Rod',  color: '#4db6ac', bg: 'rgba(77,182,172,0.18)',  title: 'Requires Good Rod'  },
+  'Super Rod': { label: 'Super Rod', color: '#ef5350', bg: 'rgba(239,83,80,0.18)',   title: 'Requires Super Rod' },
+  'Fishing':   { label: 'Fishing',   color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', title: 'Requires fishing'   },
+};
+
 export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProps) {
   const gen: 1 | 2 = pokemon.generation ?? 1;
   const isGen2 = gen === 2;
@@ -864,6 +884,8 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
             const isGen2Ver = loc.version === 'Gold' || loc.version === 'Silver' || loc.version === 'Crystal';
 
             const todConfig = loc.timeOfDay ? TIME_OF_DAY_CONFIG[loc.timeOfDay] : null;
+            const rodType = detectRodType(loc.location);
+            const rodConfig = rodType ? ROD_CONFIG[rodType] : null;
 
             return (
               <Box key={loc.version} sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
@@ -883,6 +905,46 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
                     mt: '2px',
                   }}
                 />
+
+                {/* Rod / fishing badge */}
+                {rodConfig && (
+                  <Tooltip
+                    title={rodConfig.title}
+                    placement="top"
+                    arrow
+                    enterDelay={100}
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: '#1a1a1a',
+                          border: `1px solid ${rodConfig.color}55`,
+                          borderRadius: 1,
+                          fontSize: '0.72rem',
+                          boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
+                        },
+                      },
+                      arrow: { sx: { color: `${rodConfig.color}55` } },
+                    }}
+                  >
+                    <Chip
+                      label={`🎣 ${rodConfig.label}`}
+                      size="small"
+                      sx={{
+                        flexShrink: 0,
+                        height: 20,
+                        fontSize: '0.65rem',
+                        fontWeight: 600,
+                        backgroundColor: rodConfig.bg,
+                        color: rodConfig.color,
+                        border: `1px solid ${rodConfig.color}44`,
+                        '& .MuiChip-label': { px: 0.75 },
+                        borderRadius: 0.5,
+                        mt: '2px',
+                        cursor: 'help',
+                      }}
+                    />
+                  </Tooltip>
+                )}
 
                 {/* Time-of-day badge (Gen 2 only) */}
                 {todConfig && (
