@@ -79,13 +79,16 @@ export function attackdexGSUrl(moveName: string): string {
 /**
  * Describes a mappable location.
  * - `slug`     → used to build the Serebii Pokéarth page URL
- * - `mapNum`   → numeric ID used in the map image URL
+ * - `mapNum`   → numeric ID used in the map image URL (kanto-rby)
+ * - `mapNum2`  → numeric ID used in the kanto2nd map image URL (when different from mapNum)
  * - `label`    → display name shown in tooltip header
- * - `region`   → 'kanto' | 'johto'
+ * - `region`   → 'kanto' | 'johto' | 'kanto2'
  */
 export interface KantoLocationInfo {
   slug: string;
   mapNum: number;
+  /** kanto2nd map number, when different from the kanto-rby mapNum */
+  mapNum2?: number;
   /** Optional suffix appended to mapNum in the image URL, e.g. "-area1" → "51-area1.png" */
   mapSuffix?: string;
   label: string;
@@ -129,17 +132,17 @@ export const KANTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Route 25',         info: { slug: 'route25',        mapNum: 25,  label: 'Route 25',         region: 'kanto' } },
 
   // ── Cities / Towns ──────────────────────────────────────────────────────────
-  { key: 'Pallet Town',      info: { slug: 'pallettown',     mapNum: 26,  label: 'Pallet Town',      region: 'kanto' } },
-  { key: 'Viridian City',    info: { slug: 'viridiancity',   mapNum: 27,  label: 'Viridian City',    region: 'kanto' } },
-  { key: 'Pewter City',      info: { slug: 'pewtercity',     mapNum: 28,  label: 'Pewter City',      region: 'kanto' } },
-  { key: 'Cerulean City',    info: { slug: 'ceruleancity',   mapNum: 29,  label: 'Cerulean City',    region: 'kanto' } },
-  { key: 'Vermilion City',   info: { slug: 'vermilioncity',  mapNum: 30,  label: 'Vermilion City',   region: 'kanto' } },
-  { key: 'Lavender Town',    info: { slug: 'lavendertown',   mapNum: 31,  label: 'Lavender Town',    region: 'kanto' } },
-  { key: 'Celadon City',     info: { slug: 'celadoncity',    mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
-  { key: 'Fuchsia City',     info: { slug: 'fuchsiacity',    mapNum: 36,  label: 'Fuchsia City',     region: 'kanto' } },
-  { key: 'Saffron City',     info: { slug: 'saffroncity',    mapNum: 37,  label: 'Saffron City',     region: 'kanto' } },
-  { key: 'Cinnabar Island',  info: { slug: 'cinnabarisland', mapNum: 38,  label: 'Cinnabar Island',  region: 'kanto' } },
-  { key: 'Indigo Plateau',   info: { slug: 'indigoplateau',  mapNum: 39,  label: 'Indigo Plateau',   region: 'kanto' } },
+  { key: 'Pallet Town',      info: { slug: 'pallettown',     mapNum: 26,  mapNum2: 29,  label: 'Pallet Town',      region: 'kanto' } },
+  { key: 'Viridian City',    info: { slug: 'viridiancity',   mapNum: 27,  mapNum2: 30,  label: 'Viridian City',    region: 'kanto' } },
+  { key: 'Pewter City',      info: { slug: 'pewtercity',     mapNum: 28,  mapNum2: 31,  label: 'Pewter City',      region: 'kanto' } },
+  { key: 'Cerulean City',    info: { slug: 'ceruleancity',   mapNum: 29,  mapNum2: 32,  label: 'Cerulean City',    region: 'kanto' } },
+  { key: 'Vermilion City',   info: { slug: 'vermilioncity',  mapNum: 30,  mapNum2: 33,  label: 'Vermilion City',   region: 'kanto' } },
+  { key: 'Lavender Town',    info: { slug: 'lavendertown',   mapNum: 31,  mapNum2: 34,  label: 'Lavender Town',    region: 'kanto' } },
+  { key: 'Celadon City',     info: { slug: 'celadoncity',    mapNum: 35,               label: 'Celadon City',     region: 'kanto' } },
+  { key: 'Fuchsia City',     info: { slug: 'fuchsiacity',    mapNum: 36,  mapNum2: 37,  label: 'Fuchsia City',     region: 'kanto' } },
+  { key: 'Saffron City',     info: { slug: 'saffroncity',    mapNum: 37,  mapNum2: 36,  label: 'Saffron City',     region: 'kanto' } },
+  { key: 'Cinnabar Island',  info: { slug: 'cinnabarisland', mapNum: 38,               label: 'Cinnabar Island',  region: 'kanto' } },
+  { key: 'Indigo Plateau',   info: { slug: 'indigoplateau',  mapNum: 39,               label: 'Indigo Plateau',   region: 'kanto' } },
 
   // ── Dungeons / Special Areas ─────────────────────────────────────────────────
   { key: 'Viridian Forest',  info: { slug: 'viridianforest',  mapNum: 40,  label: 'Viridian Forest',  region: 'kanto' } },
@@ -167,7 +170,7 @@ export const KANTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Game Corner',     info: { slug: 'celadoncity',     mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
   { key: 'Celadon City Store', info: { slug: 'celadoncity',  mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
   { key: 'Celadon Mansion', info: { slug: 'celadoncity',     mapNum: 35,  label: 'Celadon City',     region: 'kanto' } },
-  { key: 'Vermilion Gym',   info: { slug: 'vermilioncity',   mapNum: 30,  label: 'Vermilion City',   region: 'kanto' } },
+  { key: 'Vermilion Gym',   info: { slug: 'vermilioncity',   mapNum: 30,  mapNum2: 33,  label: 'Vermilion City',   region: 'kanto' } },
 ];
 
 // ─── Johto Location Map ───────────────────────────────────────────────────────

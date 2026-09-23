@@ -190,6 +190,7 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
                     <Box key={label} sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
                       {info.location.split(' · ').map((loc, idx) => {
                         const segments = tokenizeLocation(loc);
+                        const isGen2Ver = label === 'GS/C';
                         return (
                           <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
                             <PlaceIcon sx={{ fontSize: '0.8rem', color: '#cc0000', mt: '2px', flexShrink: 0 }} />
@@ -203,7 +204,7 @@ function MoveRow({ entry, isLevelUp, gen }: { entry: LearnedMove | TmMove; isLev
                                 seg.kind === 'text' ? (
                                   <span key={si}>{seg.text}</span>
                                 ) : (
-                                  <PlaceTooltip key={si} text={seg.text} info={seg.info} versionColor={color} />
+                                  <PlaceTooltip key={si} text={seg.text} info={seg.info} versionColor={color} isGen2Version={isGen2Ver} />
                                 )
                               )}
                             </Typography>
@@ -391,10 +392,14 @@ function PlaceTooltip({
   text,
   info,
   versionColor,
+  isGen2Version = false,
 }: {
   text: string;
   info: KantoLocationInfo;
   versionColor: string;
+  /** True when displayed in a Gen 2 version (Gold/Silver/Crystal) context — causes Kanto
+   *  locations to use the kanto2nd map screenshots instead of kanto-rby. */
+  isGen2Version?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
@@ -415,7 +420,7 @@ function PlaceTooltip({
   }, [open]);
 
   const isJohto = info.region === 'johto';
-  const isKanto2 = info.region === 'kanto2';
+  const isKanto2 = info.region === 'kanto2' || (isGen2Version && info.region === 'kanto');
   const earthUrl = isJohto
     ? pokEarthJohtoUrl(info.slug)
     : isKanto2
@@ -424,7 +429,7 @@ function PlaceTooltip({
   const imgUrl = isJohto
     ? mapImageJohtoUrl(info.mapNum)
     : isKanto2
-      ? mapImageKanto2Url(info.mapNum)
+      ? mapImageKanto2Url(info.mapNum2 ?? info.mapNum)
       : mapImageUrl(info.mapNum, info.mapSuffix);
 
   const tooltipContent = (
@@ -845,6 +850,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
           {pokemon.locations.map((loc) => {
             const versionColor = VERSION_COLOR[loc.version] ?? '#888';
             const segments = tokenizeLocation(loc.location);
+            const isGen2Ver = loc.version === 'Gold' || loc.version === 'Silver' || loc.version === 'Crystal';
 
             return (
               <Box key={loc.version} sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
@@ -878,6 +884,7 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
                         text={seg.text}
                         info={seg.info}
                         versionColor={versionColor}
+                        isGen2Version={isGen2Ver}
                       />
                     );
                   })}
