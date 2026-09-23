@@ -474,7 +474,7 @@ function PlaceTooltip({
   return (
     <Tooltip
       title={tooltipContent}
-      placement="right"
+      placement="bottom"
       arrow
       open={open}
       onOpen={() => setOpen(true)}
@@ -488,8 +488,10 @@ function PlaceTooltip({
             name: 'flip',
             enabled: true,
             options: {
-              // Flip to bottom/top/left when there isn't enough room on the preferred side
-              fallbackPlacements: ['bottom', 'top', 'left'],
+              // Prefer vertical placements — users scan routes left-to-right,
+              // so above/below keeps the tooltip out of the way of adjacent names.
+              // Fall back to horizontal only when vertical space is unavailable.
+              fallbackPlacements: ['top', 'right', 'left'],
               boundary: 'viewport',
             },
           },
