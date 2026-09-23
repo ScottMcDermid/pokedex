@@ -5630,9 +5630,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 162, method: 'level', level: 15 }],
     locations: [
-      { version: 'Gold', location: 'Routes 29, 1' },
-      { version: 'Silver', location: 'Routes 29, 1' },
-      { version: 'Crystal', location: 'Routes 29, 43, 1' },
+      { version: 'Gold', location: 'Routes 29, 1', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Routes 29, 1', timeOfDay: 'Morning & Day' },
+      { version: 'Crystal', location: 'Routes 29, 43, 1', timeOfDay: 'Morning & Day' },
     ],
   },
 
@@ -5661,9 +5661,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 161, method: 'level', level: 15 },
     locations: [
-      { version: 'Gold', location: 'Route 1' },
-      { version: 'Silver', location: 'Route 1' },
-      { version: 'Crystal', location: 'Routes 43, 1' },
+      { version: 'Gold', location: 'Route 1', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Route 1', timeOfDay: 'Morning & Day' },
+      { version: 'Crystal', location: 'Routes 43, 1', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -5690,9 +5690,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 164, method: 'level', level: 20 }],
     locations: [
-      { version: 'Gold', location: 'Routes 1, 2, Routes 29-31, Route 35-37, National Park' },
-      { version: 'Silver', location: 'Routes 1, 2, Routes 29-31, Route 35-37, National Park' },
-      { version: 'Crystal', location: 'Routes 29-37, Routes 42-46, Azalea Town, Ilex Forest, National Park, Lake of Rage, Routes 1-2' },
+      { version: 'Gold', location: 'Routes 1, 2, Routes 29-31, Route 35-37, National Park', timeOfDay: 'Night' },
+      { version: 'Silver', location: 'Routes 1, 2, Routes 29-31, Route 35-37, National Park', timeOfDay: 'Night' },
+      { version: 'Crystal', location: 'Routes 29-37, Routes 42-46, Azalea Town, Ilex Forest, National Park, Lake of Rage, Routes 1-2', timeOfDay: 'Night' },
     ],
   },
   {
@@ -5719,9 +5719,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 163, method: 'level', level: 20 },
     locations: [
-      { version: 'Gold', location: 'Routes 43, 2, Routes 8, 13-15' },
-      { version: 'Silver', location: 'Routes 43, 2, Routes 8, 13-15' },
-      { version: 'Crystal', location: 'Route 2, Routes 37-39, 43, 45-46, Ilex Forest, Routes 5, 8, 11, 13-15' },
+      { version: 'Gold', location: 'Not available (evolve Hoothoot)' },
+      { version: 'Silver', location: 'Not available (evolve Hoothoot)' },
+      { version: 'Crystal', location: 'Routes 37-39, 43', timeOfDay: 'Night' },
     ],
   },
   {
@@ -5749,8 +5749,8 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesTo: [{ id: 166, method: 'level', level: 18 }],
     locations: [
       { version: 'Gold', location: 'Trade from Silver/Crystal' },
-      { version: 'Silver', location: 'Routes 30, 31, 37, 2' },
-      { version: 'Crystal', location: 'Route 2, Routes 30-31, 33, 36-37, 42, Azalea Town, National Park' },
+      { version: 'Silver', location: 'Routes 30, 31, 37, 2', timeOfDay: 'Morning' },
+      { version: 'Crystal', location: 'Route 2, Routes 30-31, 33, 36-37, 42, Azalea Town, National Park', timeOfDay: 'Morning' },
     ],
   },
   {
@@ -5778,8 +5778,8 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesFrom: { id: 165, method: 'level', level: 18 },
     locations: [
       { version: 'Gold', location: 'Trade from Silver/Crystal' },
-      { version: 'Silver', location: 'Route 2' },
-      { version: 'Crystal', location: 'Routes 37, 2' },
+      { version: 'Silver', location: 'Route 2', timeOfDay: 'Morning' },
+      { version: 'Crystal', location: 'Routes 37, 2', timeOfDay: 'Morning' },
     ],
   },
   {
@@ -5805,9 +5805,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 168, method: 'level', level: 22 }],
     locations: [
-      { version: 'Gold', location: 'Routes 30, 31, 37, 2' },
+      { version: 'Gold', location: 'Routes 30, 31, 37, 2', timeOfDay: 'Night' },
       { version: 'Silver', location: 'Trade from Gold/Crystal' },
-      { version: 'Crystal', location: 'Route 2, Routes 30-31, 33, 36-37, 42, Azalea Town, National Park' },
+      { version: 'Crystal', location: 'Route 2, Routes 30-31, 33, 36-37, 42, Azalea Town, National Park', timeOfDay: 'Night' },
     ],
   },
   {
@@ -5834,9 +5834,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 167, method: 'level', level: 22 },
     locations: [
-      { version: 'Gold', location: 'Route 2' },
+      { version: 'Gold', location: 'Route 2', timeOfDay: 'Night' },
       { version: 'Silver', location: 'Trade from Gold/Crystal' },
-      { version: 'Crystal', location: 'Routes 37, 2' },
+      { version: 'Crystal', location: 'Routes 37, 2', timeOfDay: 'Night' },
     ],
   },
   {
@@ -6372,9 +6372,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 188, method: 'level', level: 18 }],
     locations: [
-      { version: 'Gold', location: 'Routes 32, 33, Routes 13-15' },
-      { version: 'Silver', location: 'Routes 32, 33, Routes 13-15' },
-      { version: 'Crystal', location: 'Routes 29-33, Routes 11, 13-15' },
+      { version: 'Gold', location: 'Routes 32, 33, Routes 13-15', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Routes 32, 33, Routes 13-15', timeOfDay: 'Morning & Day' },
+      { version: 'Crystal', location: 'Routes 29-33, Routes 11, 13-15', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -6483,9 +6483,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 192, method: 'stone', stone: 'Sun Stone' }],
     locations: [
-      { version: 'Gold', location: 'Route 24, National Park' },
-      { version: 'Silver', location: 'Route 24, National Park' },
-      { version: 'Crystal', location: 'Route 24, National Park' },
+      { version: 'Gold', location: 'Route 24, National Park', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Route 24, National Park', timeOfDay: 'Morning & Day' },
+      { version: 'Crystal', location: 'Route 24, National Park', timeOfDay: 'Morning & Day' },
     ],
   },
 
@@ -6567,9 +6567,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 195, method: 'level', level: 20 }],
     locations: [
-      { version: 'Gold', location: 'Route 32, Ruins of Alph, Union Cave' },
-      { version: 'Silver', location: 'Route 32, Ruins of Alph, Union Cave' },
-      { version: 'Crystal', location: 'Route 32, Ruins of Alph, Union Cave' },
+      { version: 'Gold', location: 'Route 32 (grass), Ruins of Alph, Union Cave', timeOfDay: 'Morning & Night' },
+      { version: 'Silver', location: 'Route 32 (grass), Ruins of Alph, Union Cave', timeOfDay: 'Morning & Night' },
+      { version: 'Crystal', location: 'Route 32 (grass), Ruins of Alph, Union Cave', timeOfDay: 'Night' },
     ],
   },
   {
@@ -6684,9 +6684,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'HM02', move: 'Fly' },
     ],
     locations: [
-      { version: 'Gold', location: 'Routes 7, 16, 18' },
-      { version: 'Silver', location: 'Routes 7, 16, 18' },
-      { version: 'Crystal', location: 'Routes 7, 16' },
+      { version: 'Gold', location: 'Routes 7, 16, 18', timeOfDay: 'Night' },
+      { version: 'Silver', location: 'Routes 7, 16, 18', timeOfDay: 'Night' },
+      { version: 'Crystal', location: 'Routes 7, 16', timeOfDay: 'Night' },
     ],
   },
   {
@@ -6743,9 +6743,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM46', move: 'Thief' }, { tm: 'TM50', move: 'Nightmare' }, { tm: 'HM05', move: 'Flash' },
     ],
     locations: [
-      { version: 'Gold', location: 'Mt. Silver' },
-      { version: 'Silver', location: 'Mt. Silver' },
-      { version: 'Crystal', location: 'Mt. Silver' },
+      { version: 'Gold', location: 'Not available (trade or evolve Misdreavus in Crystal)' },
+      { version: 'Silver', location: 'Not available (trade or evolve Misdreavus in Crystal)' },
+      { version: 'Crystal', location: 'Mt. Silver', timeOfDay: 'Night' },
     ],
   },
   {
@@ -6972,9 +6972,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 210, method: 'level', level: 23 }],
     locations: [
-      { version: 'Gold', location: 'Route 38' },
-      { version: 'Silver', location: 'Route 38' },
-      { version: 'Crystal', location: 'Routes 34-35, Routes 5-8' },
+      { version: 'Gold', location: 'Routes 38, 39', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Routes 38, 39' },
+      { version: 'Crystal', location: 'Routes 34, 35', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -7145,8 +7145,8 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'HM01', move: 'Cut' }, { tm: 'HM03', move: 'Surf' }, { tm: 'HM04', move: 'Strength' },
     ],
     locations: [
-      { version: 'Gold', location: 'Route 28, Mt. Silver' },
-      { version: 'Silver', location: 'Route 28, Mt. Silver' },
+      { version: 'Gold', location: 'Route 28, Mt. Silver', timeOfDay: 'Night' },
+      { version: 'Silver', location: 'Route 28, Mt. Silver', timeOfDay: 'Night' },
       { version: 'Crystal', location: 'Ice Path' },
     ],
   },
@@ -7345,9 +7345,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'HM06', move: 'Whirlpool' },
     ],
     locations: [
-      { version: 'Gold', location: 'Routes 34, 40, 41, Cherrygrove City, Olivine City, Cianwood City' },
-      { version: 'Silver', location: 'Routes 34, 40, 41, Cherrygrove City, Olivine City, Cianwood City' },
-      { version: 'Crystal', location: 'Routes 34, 40, 41, Cherrygrove City, Olivine City, Cianwood City' },
+      { version: 'Gold', location: 'Route 34 (fishing), Routes 40-41, Cherrygrove City, Olivine City, Cianwood City', timeOfDay: 'Morning & Day' },
+      { version: 'Silver', location: 'Route 34 (fishing), Routes 40-41, Cherrygrove City, Olivine City, Cianwood City', timeOfDay: 'Morning & Day' },
+      { version: 'Crystal', location: 'Route 34 (fishing), Routes 40-41, Cherrygrove City, Olivine City, Cianwood City', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -7477,7 +7477,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Gold', location: 'Trade from Silver/Crystal' },
       { version: 'Silver', location: 'Route 45' },
-      { version: 'Crystal', location: 'Route 45' },
+      { version: 'Crystal', location: 'Route 45', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -7504,9 +7504,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 229, method: 'level', level: 24 }],
     locations: [
-      { version: 'Gold', location: 'Route 7' },
-      { version: 'Silver', location: 'Route 7' },
-      { version: 'Crystal', location: 'Route 7' },
+      { version: 'Gold', location: 'Not available (trade from Crystal)' },
+      { version: 'Silver', location: 'Not available (trade from Crystal)' },
+      { version: 'Crystal', location: 'Route 7', timeOfDay: 'Night' },
     ],
   },
   {
@@ -7592,7 +7592,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Gold', location: 'Trade from Silver/Crystal' },
       { version: 'Silver', location: 'Route 45' },
-      { version: 'Crystal', location: 'Routes 45, 46' },
+      { version: 'Crystal', location: 'Route 46', timeOfDay: 'Morning' },
     ],
   },
 
@@ -7622,7 +7622,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Gold', location: 'Trade from Silver/Crystal' },
       { version: 'Silver', location: 'Route 28, Mt. Silver, Victory Road' },
-      { version: 'Crystal', location: 'Route 45' },
+      { version: 'Crystal', location: 'Route 45', timeOfDay: 'Morning & Day' },
     ],
   },
   {
@@ -7679,7 +7679,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Gold', location: 'Routes 36, 37' },
       { version: 'Silver', location: 'Routes 36, 37' },
-      { version: 'Crystal', location: 'Route 37' },
+      { version: 'Crystal', location: 'Route 37', timeOfDay: 'Night' },
     ],
   },
   {

@@ -120,10 +120,24 @@ export type GameVersion = 'Red' | 'Blue' | 'Yellow' | 'Gold' | 'Silver' | 'Cryst
 
 export const ALL_VERSIONS: GameVersion[] = ['Red', 'Blue', 'Yellow', 'Gold', 'Silver', 'Crystal'];
 
+/** Time of day when a Pokémon can be encountered in the wild */
+export type TimeOfDay = 'Morning' | 'Day' | 'Night' | 'Morning & Day' | 'Morning & Night';
+
+/** Hour ranges for each time-of-day period (Gen 2 / Crystal) */
+export const TIME_OF_DAY_HOURS: Record<TimeOfDay, string> = {
+  Morning:           '4:00 AM – 9:59 AM',
+  Day:               '10:00 AM – 5:59 PM',
+  Night:             '6:00 PM – 3:59 AM',
+  'Morning & Day':   '4:00 AM – 5:59 PM',
+  'Morning & Night': '4:00 AM – 9:59 AM, 6:00 PM – 3:59 AM',
+};
+
 export interface VersionLocation {
   version: GameVersion;
   /** Human-readable availability / location, e.g. "Starter Pokemon", "Viridian Forest (Common)" */
   location: string;
+  /** Time of day this Pokémon can be encountered (Gen 2 only) */
+  timeOfDay?: TimeOfDay;
 }
 
 // ─── Base Stats ───────────────────────────────────────────────────────────────

@@ -27,7 +27,7 @@ import Image from 'next/image';
 
 import { usePokemonTracker, CatchStatus, UNOWN_FORMS } from '@/data/pokemonStore';
 
-import { PokemonDefinition, LearnedMove, TmMove } from '@/utils/pokemonTypes';
+import { PokemonDefinition, LearnedMove, TmMove, TimeOfDay, TIME_OF_DAY_HOURS } from '@/utils/pokemonTypes';
 import { TYPE_COLORS } from '@/utils/pokemonTypes';
 import TypeBadge from '@/components/TypeBadge';
 import { PokemonSprite, UnownSprite } from '@/components/PokemonSprite';
@@ -691,6 +691,15 @@ function versionTextColor(version: string): string {
   return version === 'Yellow' ? '#000' : '#fff';
 }
 
+/** Visual config for each time-of-day period */
+const TIME_OF_DAY_CONFIG: Record<TimeOfDay, { label: string; icon: string; color: string; bg: string }> = {
+  Morning:           { label: 'Morning',         icon: '🌅', color: '#f59e0b', bg: 'rgba(245,158,11,0.15)' },
+  Day:               { label: 'Day',             icon: '☀️',  color: '#facc15', bg: 'rgba(250,204,21,0.12)' },
+  Night:             { label: 'Night',           icon: '🌙', color: '#818cf8', bg: 'rgba(129,140,248,0.15)' },
+  'Morning & Day':   { label: 'Morning & Day',   icon: '🌤️', color: '#fb923c', bg: 'rgba(251,146,60,0.13)' },
+  'Morning & Night': { label: 'Morning & Night', icon: '🌓', color: '#a78bfa', bg: 'rgba(167,139,250,0.13)' },
+};
+
 export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProps) {
   const gen: 1 | 2 = pokemon.generation ?? 1;
   const isGen2 = gen === 2;
@@ -852,6 +861,8 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
             const segments = tokenizeLocation(loc.location);
             const isGen2Ver = loc.version === 'Gold' || loc.version === 'Silver' || loc.version === 'Crystal';
 
+            const todConfig = loc.timeOfDay ? TIME_OF_DAY_CONFIG[loc.timeOfDay] : null;
+
             return (
               <Box key={loc.version} sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
                 {/* Version badge */}
@@ -870,6 +881,55 @@ export default function PokemonDetail({ pokemon, onNavigate }: PokemonDetailProp
                     mt: '2px',
                   }}
                 />
+
+                {/* Time-of-day badge (Gen 2 only) */}
+                {todConfig && (
+                  <Tooltip
+                    title={
+                      <Box sx={{ px: 0.5, py: 0.25 }}>
+                        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: todConfig.color }}>
+                          {todConfig.icon} {todConfig.label}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.7)', mt: 0.25 }}>
+                          {TIME_OF_DAY_HOURS[loc.timeOfDay!]}
+                        </Typography>
+                      </Box>
+                    }
+                    placement="top"
+                    arrow
+                    enterDelay={100}
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: '#1a1a1a',
+                          border: `1px solid ${todConfig.color}55`,
+                          borderRadius: 1,
+                          p: 0.75,
+                          boxShadow: `0 2px 12px rgba(0,0,0,0.5)`,
+                        },
+                      },
+                      arrow: { sx: { color: `${todConfig.color}55` } },
+                    }}
+                  >
+                    <Chip
+                      label={`${todConfig.icon} ${todConfig.label}`}
+                      size="small"
+                      sx={{
+                        flexShrink: 0,
+                        height: 20,
+                        fontSize: '0.65rem',
+                        fontWeight: 600,
+                        backgroundColor: todConfig.bg,
+                        color: todConfig.color,
+                        border: `1px solid ${todConfig.color}44`,
+                        '& .MuiChip-label': { px: 0.75 },
+                        borderRadius: 0.5,
+                        mt: '2px',
+                        cursor: 'help',
+                      }}
+                    />
+                  </Tooltip>
+                )}
 
                 {/* Tokenised location line */}
                 <Box component="span" sx={{ fontSize: '0.78rem', lineHeight: 1.6, color: 'text.primary' }}>
