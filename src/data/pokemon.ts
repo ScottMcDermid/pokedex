@@ -953,8 +953,8 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 23, method: 'level', level: 22 },
     locations: [
-      { version: 'Red', location: 'Safari Zone (Rare)' },
-      { version: 'Blue', location: 'Routes 6, 8, 10, 23, Safari Zone (Common)' },
+      { version: 'Red', location: 'Safari Zone Area 1 (Rare)' },
+      { version: 'Blue', location: 'Routes 6, 8, 10, 23, Safari Zone Area 1 (Common)' },
       { version: 'Yellow', location: 'Route 23 (Rare)' },
     ],
   },
@@ -1195,7 +1195,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Red', location: 'Routes 2, 22 (Common)' },
       { version: 'Blue', location: 'Routes 2, 22 (Common)' },
-      { version: 'Yellow', location: 'Routes 2, 9, 22, Safari Zone (Common)' },
+      { version: 'Yellow', location: 'Routes 2, 9, 22, Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Common)' },
     ],
   },
   {
@@ -1235,9 +1235,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesFrom: { id: 29, method: 'level', level: 16 },
     evolvesTo: [{ id: 31, method: 'stone', stone: 'Moon Stone' }],
     locations: [
-      { version: 'Red', location: 'Safari Zone (Rare)' },
-      { version: 'Blue', location: 'Safari Zone (Rare)' },
-      { version: 'Yellow', location: 'Safari Zone (Rare)' },
+      { version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 3, Safari Zone Area 4 (Rare)' },
+      { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
+      { version: 'Yellow', location: 'Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
     ],
   },
   // ─── 031-040 ──────────────────────────────────────────────────────────────
@@ -1339,7 +1339,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     locations: [
       { version: 'Red', location: 'Routes 2, 22 (Common)' },
       { version: 'Blue', location: 'Routes 2, 22 (Common)' },
-      { version: 'Yellow', location: 'Routes 2, 9, 22, Safari Zone (Common)' },
+      { version: 'Yellow', location: 'Routes 2, 9, 22, Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Common)' },
     ],
   },
   {
@@ -1379,9 +1379,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesFrom: { id: 32, method: 'level', level: 16 },
     evolvesTo: [{ id: 34, method: 'stone', stone: 'Moon Stone' }],
     locations: [
-      { version: 'Red', location: 'Safari Zone (Uncommon)' },
-      { version: 'Blue', location: 'Safari Zone (Uncommon)' },
-      { version: 'Yellow', location: 'Safari Zone (Uncommon)' },
+      { version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
+      { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
+      { version: 'Yellow', location: 'Safari Zone Area 1, Safari Zone Area 2 (Uncommon)' },
     ],
   },
   {
@@ -1964,9 +1964,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesTo: [{ id: 47, method: 'level', level: 24 }],
     locations: [
-      { version: 'Red', location: 'Mt. Moon, Safari Zone (Uncommon)' },
+      { version: 'Red', location: 'Mt. Moon, Safari Zone Area 2, Safari Zone Area 3 (Uncommon)' },
       { version: 'Blue', location: 'Not available (Trade)' },
-      { version: 'Yellow', location: 'Mt. Moon (Uncommon)' },
+      { version: 'Yellow', location: 'Mt. Moon, Safari Zone Area 1 (Uncommon)' },
     ],
   },
   {
@@ -2002,9 +2002,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 46, method: 'level', level: 24 },
     locations: [
-      { version: 'Red', location: 'Safari Zone (Rare)' },
+      { version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 2 (Rare)' },
       { version: 'Blue', location: 'Not available (Trade/Evolve)' },
-      { version: 'Yellow', location: 'Safari Zone (Rare)' },
+      { version: 'Yellow', location: 'Safari Zone Area 1 (Rare)' },
     ],
   },
   {
@@ -2081,9 +2081,9 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     ],
     evolvesFrom: { id: 48, method: 'level', level: 31 },
     locations: [
-      { version: 'Red', location: 'Safari Zone (Uncommon)' },
+      { version: 'Red', location: 'Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
       { version: 'Blue', location: 'Routes 24, 25 (Uncommon)' },
-      { version: 'Yellow', location: 'Safari Zone (Uncommon)' },
+      { version: 'Yellow', location: 'Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' },
     ],
   },
   {
@@ -2309,7 +2309,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesTo: [{ id: 55, method: 'level', level: 33 }],
     locations: [
       { version: 'Red', location: 'Not available (Trade)' },
-      { version: 'Blue', location: 'Routes 6, 22, Safari Zone (Uncommon)' },
+      { version: 'Blue', location: 'Routes 6, 22, Safari Zone (Fishing, all areas)' },
       { version: 'Yellow', location: 'Seafoam Islands (Uncommon)' },
     ],
   },
@@ -3200,7 +3200,6 @@ const _pokemonDefinitions: PokemonDefinition[] = [
     evolvesFrom: { id: 79, method: 'level', level: 37 },
     locations: [{ version: 'Red', location: 'Safari Zone (Rare)' }, { version: 'Blue', location: 'Safari Zone (Rare)' }, { version: 'Yellow', location: 'Safari Zone (Rare)' }],
   },
-  // ─── 081-090 ──────────────────────────────────────────────────────────────
   {
     id: 81, name: 'Magnemite', types: ['Electric'], classification: 'Magnet Pokémon',
     height: "1'00\"", weight: '13.2lbs', captureRate: 190,
@@ -3612,7 +3611,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM44', move: 'Rest' }, { tm: 'TM46', move: 'Psywave' }, { tm: 'TM50', move: 'Substitute' },
     ],
     evolvesTo: [{ id: 103, method: 'stone', stone: 'Leaf Stone' }],
-    locations: [{ version: 'Red', location: 'Safari Zone (Common)' }, { version: 'Blue', location: 'Safari Zone (Common)' }, { version: 'Yellow', location: 'Safari Zone (Common)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Common)' }, { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Common)' }, { version: 'Yellow', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3, Safari Zone Area 4 (Common)' }],
   },
   {
     id: 103, name: 'Exeggutor', types: ['Grass', 'Psychic'], classification: 'Coconut Pokémon',
@@ -3783,7 +3782,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'HM04', move: 'Strength' },
     ],
     evolvesTo: [{ id: 112, method: 'level', level: 42 }],
-    locations: [{ version: 'Red', location: 'Safari Zone (Common)' }, { version: 'Blue', location: 'Safari Zone (Common)' }, { version: 'Yellow', location: 'Safari Zone (Common)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 3 (Common)' }, { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 3 (Common)' }, { version: 'Yellow', location: 'Safari Zone Area 1, Safari Zone Area 3 (Common)' }],
   },
   {
     id: 112, name: 'Rhydon', types: ['Ground', 'Rock'], classification: 'Drill Pokémon',
@@ -3828,7 +3827,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM46', move: 'Psywave' }, { tm: 'TM50', move: 'Substitute' }, { tm: 'HM04', move: 'Strength' },
     ],
     specialMoves: ['Soft-Boiled'],
-    locations: [{ version: 'Red', location: 'Safari Zone (Rare)' }, { version: 'Blue', location: 'Safari Zone (Rare)' }, { version: 'Yellow', location: 'Safari Zone (Rare)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 3 (Rare)' }, { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 3 (Rare)' }, { version: 'Yellow', location: 'Safari Zone Area 1, Safari Zone Area 2 (Rare)' }],
   },
   {
     id: 114, name: 'Tangela', types: ['Grass'], classification: 'Vine Pokémon',
@@ -3865,7 +3864,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM39', move: 'Swift' }, { tm: 'TM40', move: 'Skull Bash' }, { tm: 'TM44', move: 'Rest' },
       { tm: 'TM50', move: 'Substitute' }, { tm: 'HM04', move: 'Strength' },
     ],
-    locations: [{ version: 'Red', location: 'Safari Zone (Rare)' }, { version: 'Blue', location: 'Safari Zone (Rare)' }, { version: 'Yellow', location: 'Safari Zone (Rare)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 2, Safari Zone Area 4 (Rare)' }, { version: 'Blue', location: 'Safari Zone Area 2, Safari Zone Area 4 (Rare)' }, { version: 'Yellow', location: 'Safari Zone Area 3 (Rare)' }],
   },
   {
     id: 116, name: 'Horsea', types: ['Water'], classification: 'Dragon Pokémon',
@@ -3919,7 +3918,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'HM03', move: 'Surf' },
     ],
     evolvesTo: [{ id: 119, method: 'level', level: 33 }],
-    locations: [{ version: 'Red', location: 'Routes 4, 12, 13, Safari Zone (Fishing)' }, { version: 'Blue', location: 'Routes 4, 12, 13, Safari Zone (Fishing)' }, { version: 'Yellow', location: 'Routes 4, 12, 13, Safari Zone (Fishing)' }],
+    locations: [{ version: 'Red', location: 'Routes 4, 12, 13, Safari Zone (Fishing, all areas)' }, { version: 'Blue', location: 'Routes 4, 12, 13, Safari Zone (Fishing, all areas)' }, { version: 'Yellow', location: 'Routes 4, 12, 13, Safari Zone (Fishing, all areas)' }],
   },
   {
     id: 119, name: 'Seaking', types: ['Water'], classification: 'Goldfish Pokémon',
@@ -4018,7 +4017,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM39', move: 'Swift' }, { tm: 'TM44', move: 'Rest' }, { tm: 'TM50', move: 'Substitute' },
       { tm: 'HM01', move: 'Cut' },
     ],
-    locations: [{ version: 'Red', location: 'Safari Zone (Rare)' }, { version: 'Blue', location: 'Not available (Trade)' }, { version: 'Yellow', location: 'Safari Zone (Rare)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 1, Safari Zone Area 2 (Rare)' }, { version: 'Blue', location: 'Not available (Trade)' }, { version: 'Yellow', location: 'Safari Zone Area 2, Safari Zone Area 3 (Rare)' }],
   },
   {
     id: 124, name: 'Jynx', types: ['Ice', 'Psychic'], classification: 'Human Shape Pokémon',
@@ -4092,7 +4091,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM32', move: 'Double Team' }, { tm: 'TM34', move: 'Bide' }, { tm: 'TM44', move: 'Rest' },
       { tm: 'TM50', move: 'Substitute' }, { tm: 'HM01', move: 'Cut' }, { tm: 'HM04', move: 'Strength' },
     ],
-    locations: [{ version: 'Red', location: 'Not available (Trade)' }, { version: 'Blue', location: 'Safari Zone (Rare)' }, { version: 'Yellow', location: 'Not available (Trade)' }],
+    locations: [{ version: 'Red', location: 'Not available (Trade)' }, { version: 'Blue', location: 'Safari Zone Area 1, Safari Zone Area 2, Safari Zone Area 3 (Rare)' }, { version: 'Yellow', location: 'Safari Zone Area 3, Safari Zone Area 4 (Rare)' }],
   },
   {
     id: 128, name: 'Tauros', types: ['Normal'], classification: 'Wild Bull Pokémon',
@@ -4110,7 +4109,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM32', move: 'Double Team' }, { tm: 'TM34', move: 'Bide' }, { tm: 'TM38', move: 'Fire Blast' },
       { tm: 'TM44', move: 'Rest' }, { tm: 'TM50', move: 'Substitute' }, { tm: 'HM04', move: 'Strength' },
     ],
-    locations: [{ version: 'Red', location: 'Safari Zone (Uncommon)' }, { version: 'Blue', location: 'Safari Zone (Uncommon)' }, { version: 'Yellow', location: 'Safari Zone (Uncommon)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' }, { version: 'Blue', location: 'Safari Zone Area 3, Safari Zone Area 4 (Uncommon)' }, { version: 'Yellow', location: 'Safari Zone Area 2, Safari Zone Area 4 (Uncommon)' }],
   },
   {
     id: 129, name: 'Magikarp', types: ['Water'], classification: 'Fish Pokémon',
@@ -4463,7 +4462,7 @@ const _pokemonDefinitions: PokemonDefinition[] = [
       { tm: 'TM50', move: 'Substitute' }, { tm: 'HM03', move: 'Surf' },
     ],
     evolvesTo: [{ id: 148, method: 'level', level: 30 }],
-    locations: [{ version: 'Red', location: 'Safari Zone, Celadon Game Corner (Prize), Fishing in Dragon Den route' }, { version: 'Blue', location: 'Safari Zone, Celadon Game Corner (Prize), Fishing in Dragon Den route' }, { version: 'Yellow', location: 'Safari Zone, Celadon Game Corner (Prize)' }],
+    locations: [{ version: 'Red', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize), Fishing in Dragon Den route' }, { version: 'Blue', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize), Fishing in Dragon Den route' }, { version: 'Yellow', location: 'Safari Zone (Fishing, all areas), Celadon Game Corner (Prize)' }],
   },
   {
     id: 148, name: 'Dragonair', types: ['Dragon'], classification: 'Dragon Pokémon',

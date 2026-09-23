@@ -86,6 +86,8 @@ export function attackdexGSUrl(moveName: string): string {
 export interface KantoLocationInfo {
   slug: string;
   mapNum: number;
+  /** Optional suffix appended to mapNum in the image URL, e.g. "-area1" → "51-area1.png" */
+  mapSuffix?: string;
   label: string;
   region?: 'kanto' | 'johto' | 'kanto2';
 }
@@ -145,6 +147,10 @@ export const KANTO_LOCATIONS: Array<{ key: string; info: KantoLocationInfo }> = 
   { key: 'Rock Tunnel',      info: { slug: 'rocktunnel',      mapNum: 44,  label: 'Rock Tunnel',      region: 'kanto' } },
   { key: 'Pokémon Tower',    info: { slug: 'pokemontower',    mapNum: 48,  label: 'Pokémon Tower',    region: 'kanto' } },
   { key: 'Pokemon Tower',    info: { slug: 'pokemontower',    mapNum: 48,  label: 'Pokémon Tower',    region: 'kanto' } },
+  { key: 'Safari Zone Area 1', info: { slug: 'safarizone', mapNum: 51, mapSuffix: '-area1', label: 'Safari Zone (Area 1)', region: 'kanto' } },
+  { key: 'Safari Zone Area 2', info: { slug: 'safarizone', mapNum: 51, mapSuffix: '-area2', label: 'Safari Zone (Area 2)', region: 'kanto' } },
+  { key: 'Safari Zone Area 3', info: { slug: 'safarizone', mapNum: 51, mapSuffix: '-area3', label: 'Safari Zone (Area 3)', region: 'kanto' } },
+  { key: 'Safari Zone Area 4', info: { slug: 'safarizone', mapNum: 51, mapSuffix: '-area4', label: 'Safari Zone (Area 4)', region: 'kanto' } },
   { key: 'Safari Zone',      info: { slug: 'safarizone',      mapNum: 51,  label: 'Safari Zone',      region: 'kanto' } },
   { key: 'Seafoam Islands',  info: { slug: 'seafoamislands',  mapNum: 53,  label: 'Seafoam Islands',  region: 'kanto' } },
   { key: 'Victory Road',     info: { slug: 'victoryroad',     mapNum: 55,  label: 'Victory Road',     region: 'kanto' } },
@@ -255,9 +261,9 @@ export function pokEarthKanto2Url(slug: string): string {
   return `https://www.serebii.net/pokearth/kanto/2nd/${slug}.shtml`;
 }
 
-/** Build the RBY map image URL for a Kanto map number */
-export function mapImageUrl(mapNum: number): string {
-  return `https://www.serebii.net/pokearth/maps/kanto-rby/${mapNum}.png`;
+/** Build the RBY map image URL for a Kanto map number, with an optional area suffix (e.g. "-area1"). */
+export function mapImageUrl(mapNum: number, mapSuffix?: string): string {
+  return `https://www.serebii.net/pokearth/maps/kanto-rby/${mapNum}${mapSuffix ?? ''}.png`;
 }
 
 /** Build the GSC map image URL for a Johto map number */

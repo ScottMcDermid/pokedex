@@ -422,7 +422,7 @@ function PlaceTooltip({
     ? mapImageJohtoUrl(info.mapNum)
     : isKanto2
       ? mapImageKanto2Url(info.mapNum)
-      : mapImageUrl(info.mapNum);
+      : mapImageUrl(info.mapNum, info.mapSuffix);
 
   const tooltipContent = (
     <Box sx={{ p: 0.5, display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 340 }}>
